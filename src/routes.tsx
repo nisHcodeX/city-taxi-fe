@@ -2,6 +2,9 @@ import { lazy } from "react";
 import { useRoutes } from "react-router-dom";
 import DashboardLayout from "./layouts/DashboardLayout";
 import UnauthorizedLayout from "./layouts/UnauthorizedLayout";
+import LoginPage from "./features/login";
+import UserSignInPage from "./features/userSignIn";
+import DriverSignInPage from "./features/driverSignIn";
 
 const Error = lazy(() => import("./features/error/Error"));
 const Home = lazy(() => import("./features/home/Home"));
@@ -13,9 +16,30 @@ const Dashboard = lazy(() => import("./features/dashboard/Dashboard"));
 export default function AppRoutes() {
   return useRoutes([
     {
+      element: <LoginPage />, 
+      path:'/'
+    },
+    {
+      element: <UserSignInPage />, 
+      path:'/userSignin'
+    },
+    {
+      element: <DriverSignInPage />, 
+      path:'/driverSignIn'
+    },
+    {
       element: <DashboardLayout />,
       children: [
-        { path: "/", element: <Dashboard /> },
+        { path: "userDashboard", element: <Dashboard /> },
+        { path: "counter", element: <Counter /> },
+        { path: "todo", element: <Todo /> },
+        { path: "error", element: <Error /> },
+      ],
+    },
+    {
+      element: <DashboardLayout />,
+      children: [
+        { path: "driverDashboard", element: <Dashboard /> },
         { path: "counter", element: <Counter /> },
         { path: "todo", element: <Todo /> },
         { path: "error", element: <Error /> },

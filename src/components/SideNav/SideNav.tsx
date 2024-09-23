@@ -127,7 +127,7 @@ const SideNav = ({ open, onDrawerOpen, onDrawerClose }: any) => {
             navigate(`/`);
           }}
         >
-          <ImageSrc style={{ backgroundImage: `url(${logoUrl})` }} />
+          {/* <ImageSrc style={{ backgroundImage: `url(${logoUrl})` }} /> */}
         </ImageButton>
         <IconButton onClick={handleDrawerClose}>
           {theme.direction === 'rtl' ? <ChevronRight /> : <ChevronLeft />}

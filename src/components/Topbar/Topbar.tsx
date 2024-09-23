@@ -75,10 +75,10 @@ const Topbar = ({open, onDrawerOpen}: any) => {
           <MenuIcon/>
         </IconButton>
         <Typography variant="h6" noWrap component="div">
-          <Trans i18nKey="app.title">React + Redux-Toolkit + MUI + Typescript Boilerplate</Trans>
+          {/* <Trans i18nKey="app.title">React + Redux-Toolkit + MUI + Typescript Boilerplate</Trans> */}
         </Typography>
 
-        <Select onChange={onLangChange} defaultValue={lang} style={{marginLeft: 'auto'}}>
+        {/* <Select onChange={onLangChange} defaultValue={lang} style={{marginLeft: 'auto'}}>
           {languages.map((lan:any) => (
             <MenuItem
               key={lan.lang}
@@ -90,7 +90,7 @@ const Topbar = ({open, onDrawerOpen}: any) => {
           style={{marginLeft: 'auto'}}
           control={<Switch checked={themeMode == 'dark'} onChange={() => dispatch(changeThemeMode(themeMode))}/>}
           label={t('app.darkMood')}
-        />
+        /> */}
       </Toolbar>
     </AppBar>
   );
