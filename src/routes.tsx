@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { useRoutes } from "react-router-dom";
-import DashboardLayout from "./layouts/DashboardLayout";
+import DashboardLayout from "./layouts/UserDashboardLayout";
 import UnauthorizedLayout from "./layouts/UnauthorizedLayout";
 import LoginPage from "./features/login";
 import UserSignInPage from "./features/userSignIn";
@@ -16,8 +16,12 @@ const Dashboard = lazy(() => import("./features/dashboard/Dashboard"));
 export default function AppRoutes() {
   return useRoutes([
     {
-      element: <LoginPage />, 
+      element: <Home />, 
       path:'/'
+    },
+    {
+      element: <LoginPage />, 
+      path:'/login'
     },
     {
       element: <UserSignInPage />, 

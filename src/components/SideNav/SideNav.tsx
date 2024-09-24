@@ -25,6 +25,7 @@ import MuiDrawer from "@mui/material/Drawer/Drawer";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import logoUrl from "../../logo.jpg";
+import LogoContainer from "../logoContainer";
 
 const drawerWidth = 240;
 
@@ -127,7 +128,7 @@ const SideNav = ({ open, onDrawerOpen, onDrawerClose }: any) => {
             navigate(`/`);
           }}
         >
-          {/* <ImageSrc style={{ backgroundImage: `url(${logoUrl})` }} /> */}
+          <LogoContainer width="100px"/>
         </ImageButton>
         <IconButton onClick={handleDrawerClose}>
           {theme.direction === 'rtl' ? <ChevronRight /> : <ChevronLeft />}
@@ -139,7 +140,7 @@ const SideNav = ({ open, onDrawerOpen, onDrawerClose }: any) => {
           <ListItemButton
             sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5 }}
             onClick={() => {
-              navigate(`/`);
+              navigate(`/userDashboard`);
             }}
           >
             <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>

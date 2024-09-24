@@ -202,7 +202,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean, loginType:
             <Link
               onClick={onSingupNavigate}
               variant="body2"
-              sx={{ alignSelf: 'center' }}
+              sx={{ alignSelf: 'center', cursor: 'pointer' }}
             >
               Sign up
             </Link>

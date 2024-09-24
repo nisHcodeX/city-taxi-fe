@@ -25,7 +25,7 @@ const PageContainer = styled(Container, { shouldForwardProp: (prop) => prop !== 
   }),
 }));
 
-const DashboardLayout = () => {
+const UserDashboardLayout = () => {
   const [open, setOpen] = useState(false);
 
   const handleDrawerOpen = () => {
@@ -49,4 +49,4 @@ const DashboardLayout = () => {
   );
 };
 
-export default DashboardLayout;
+export default UserDashboardLayout;

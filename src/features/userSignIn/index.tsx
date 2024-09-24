@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { Box, Button, Card, CardContent, FormControl, FormLabel, Stack, TextField, Typography } from "@mui/material";
 import LogoContainer from "../../components/logoContainer";
+import { useNavigate } from "react-router";
 
 const SignInContainer = styled(Stack)(({ theme }) => ({
     '&::before': {
@@ -16,9 +17,15 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function UserSignInPage() {
+    const navigate = useNavigate ();
+
+    const onBackClick = () =>{
+        navigate('/login');
+    };
+
     return (
         <SignInContainer>
-            <Box sx={{ width: '100%', typography: 'body1', }} className="login-wrapper"
+            <Box sx={{ width: '100%', typography: 'body1', marginTop: '50px' }} className="login-wrapper"
             >
                 <CardContent sx={{ width: '600px' }}>
                     <Card variant='outlined' className="login-card">
@@ -51,7 +58,7 @@ export default function UserSignInPage() {
                                     id="firstName"
                                     type="firstName"
                                     name="firstName"
-                                    placeholder="First Name Here"
+                                    placeholder="First Name"
                                     autoComplete="firstName"
                                     autoFocus
                                     required
@@ -70,7 +77,7 @@ export default function UserSignInPage() {
                                     id="lastName"
                                     type="lastName"
                                     name="lastName"
-                                    placeholder="Last Name Here"
+                                    placeholder="Last Name"
                                     autoComplete="lastName"
                                     autoFocus
                                     required
@@ -108,7 +115,7 @@ export default function UserSignInPage() {
                                     id="phoneNumber"
                                     type="phoneNumber"
                                     name="phoneNumber"
-                                    placeholder="phone number here"
+                                    placeholder="phone number"
                                     autoComplete="phoneNumber"
                                     autoFocus
                                     required
@@ -119,16 +126,16 @@ export default function UserSignInPage() {
                                 />
                             </FormControl>
                             <FormControl>
-                                <FormLabel className="sign-label" htmlFor="nic">NIC Number</FormLabel>
+                                <FormLabel className="sign-label" htmlFor="password">Password</FormLabel>
                                 <TextField
                                     className="input-item"
                                     // error={emailError}
                                     // helperText={emailErrorMessage}
-                                    id="nic"
-                                    type="nic"
-                                    name="nic"
-                                    placeholder="NIC here"
-                                    autoComplete="email"
+                                    id="password"
+                                    type="password"
+                                    name="password"
+                                    placeholder="password"
+                                    autoComplete="password"
                                     autoFocus
                                     required
                                     fullWidth
@@ -138,16 +145,16 @@ export default function UserSignInPage() {
                                 />
                             </FormControl>
                             <FormControl>
-                                <FormLabel className="sign-label" htmlFor="location">Location</FormLabel>
+                                <FormLabel className="sign-label" htmlFor="confirmPassword">Confirm Password</FormLabel>
                                 <TextField
                                     className="input-item"
                                     // error={emailError}
                                     // helperText={emailErrorMessage}
-                                    id="location"
-                                    type="location"
-                                    name="location"
-                                    placeholder="Location here"
-                                    autoComplete="location"
+                                    id="confirmPassword"
+                                    type="confirmPassword"
+                                    name="confirmPassword"
+                                    placeholder="confirm Password"
+                                    autoComplete="confirmPassword"
                                     autoFocus
                                     required
                                     fullWidth
@@ -166,7 +173,7 @@ export default function UserSignInPage() {
                             <Button
                                 type="button"
                                 variant="outlined"
-                            // onClick={validateInputs}
+                            onClick={onBackClick}
                             >
                                 Back
                             </Button>
