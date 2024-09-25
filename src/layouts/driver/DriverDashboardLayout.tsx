@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
-import SideNav from "../components/SideNav/SideNav";
-import TopBar from "../components/Topbar/Topbar";
+import SideNav from "./SideNav";
+import TopBar from "../../components/Topbar/Topbar";
 import { Suspense, useState } from "react";
 import { Container, styled } from "@mui/material";
 
@@ -25,7 +25,7 @@ const PageContainer = styled(Container, { shouldForwardProp: (prop) => prop !== 
   }),
 }));
 
-const UserDashboardLayout = () => {
+const DriverDashboardLayout = () => {
   const [open, setOpen] = useState(false);
 
   const handleDrawerOpen = () => {
@@ -49,4 +49,4 @@ const UserDashboardLayout = () => {
   );
 };
 
-export default UserDashboardLayout;
+export default DriverDashboardLayout;
