@@ -70,7 +70,11 @@ export default function SignIn(props: { disableCustomTheme?: boolean, loginType:
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-
+    if(props.loginType == Roles.USER){
+      navigate(`/user/dashboard`);
+    }else if (props.loginType == Roles.DRIVER){
+      navigate(`/driver/dashboard`);
+    }
     console.log({
       email: data.get('email'),
       password: data.get('password'),

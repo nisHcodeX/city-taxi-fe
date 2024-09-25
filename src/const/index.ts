@@ -3,5 +3,14 @@ enum Roles {
     DRIVER = 2,
     OPERATOR = 3
 }
+enum VehicleType {
+    CAR = 1,
+    BIKE = 2
+}
 
-export { Roles };
+enum DriverStatus{
+    AVAILABLE = 1,
+    BUSY = 2,
+}
+
+export { Roles, VehicleType, DriverStatus };
