@@ -2,13 +2,19 @@ import React, { FC, useEffect, useRef, useState } from "react";
 import { TextField } from "@mui/material";
 import { usePlacesWidget } from "react-google-autocomplete";
 
+
 type Props = {
   initialLat?: number;
   initialLng?: number;
   apiKey?: string;
+  results: (data: { 
+    address: string; 
+    lat: number; 
+    lng: number; 
+  }) => void; 
 };
 
-const GeocodingAutocomplete: FC<Props> = ({ initialLat, initialLng, apiKey = 'AIzaSyAjmXiD-nVEaLyalBEB8mUDtLkvCtjID6I' }) => {
+const GeocodingAutocomplete: FC<Props> = ({ initialLat, initialLng, apiKey = 'AIzaSyAjmXiD-nVEaLyalBEB8mUDtLkvCtjID6I', results }) => {
   const [address, setAddress] = useState<string>("");
   const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
   const { ref } = usePlacesWidget({
@@ -19,7 +25,7 @@ const GeocodingAutocomplete: FC<Props> = ({ initialLat, initialLng, apiKey = 'AI
         const lng = place.geometry.location.lng();
         setCoordinates({ lat, lng });
         setAddress(place.formatted_address || "");
-        console.log("Place selected:", place.formatted_address, lat, lng);
+        results({address: place.formatted_address || "", lat, lng})
       }
     },
     options: {

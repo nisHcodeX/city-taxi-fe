@@ -17,11 +17,14 @@ export default function AdminLoginPage() {
     setValue(newValue);
   };
 
+  const locationResults = (data : any)=>{
+    console.log('locationResults data', data)
+  }
   return (
     <Box sx={{ width: '100%', typography: 'body1', }} className="login-wrapper">
       <CardContent sx={{width: '500px'}}>
         <Card variant='outlined' className='login-card' sx={{padding: '20px'}}>
-          <GooglePlacesAutocomplete  />
+          <GooglePlacesAutocomplete  results={locationResults}/>
           <SignIn loginType={Roles.ADMIN}/>
         </Card>
       </CardContent>
