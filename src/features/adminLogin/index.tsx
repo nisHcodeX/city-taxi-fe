@@ -8,6 +8,7 @@ import { Card, CardContent } from '@mui/material';
 import './index.scss';
 import { Roles } from '../../const';
 import SignIn from './login';
+import GooglePlacesAutocomplete from '../../components/locationSearch';
 
 export default function AdminLoginPage() {
   const [value, setValue] = React.useState('1');
@@ -20,6 +21,7 @@ export default function AdminLoginPage() {
     <Box sx={{ width: '100%', typography: 'body1', }} className="login-wrapper">
       <CardContent sx={{width: '500px'}}>
         <Card variant='outlined' className='login-card' sx={{padding: '20px'}}>
+          <GooglePlacesAutocomplete  />
           <SignIn loginType={Roles.ADMIN}/>
         </Card>
       </CardContent>

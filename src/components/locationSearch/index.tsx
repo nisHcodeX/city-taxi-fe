@@ -1,66 +1,55 @@
-import { TextFields } from "@mui/icons-material";
-import { Autocomplete, Box, TextField } from "@mui/material";
+import React, { FC, useEffect, useRef, useState } from "react";
+import { TextField } from "@mui/material";
+import { usePlacesWidget } from "react-google-autocomplete";
 
-interface CountryType {
-    code: string;
-    label: string;
-    phone: string;
-    suggested?: boolean;
-}
-
-const countries: readonly CountryType[] = [
-    { code: 'AD', label: 'Andorra', phone: '376' },
-    {
-      code: 'AE',
-      label: 'United Arab Emirates',
-      phone: '971',
-    },
-    { code: 'AF', label: 'Afghanistan', phone: '93' },
-    {
-      code: 'AG',
-      label: 'Antigua and Barbuda',
-      phone: '1-268',
-    },
-];
-
-export default function LocationList() {
-    <Autocomplete
-    id="country-select-demo"
-    sx={{ width: 300 }}
-    options={countries}
-    autoHighlight
-    getOptionLabel={(option: any) => option.label}
-    renderOption={(props, option) => {
-      const { key, ...optionProps } = props;
-      return (
-        <Box
-          key={key}
-          component="li"
-          sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
-          {...optionProps}
-        >
-          <img
-            loading="lazy"
-            width="20"
-            srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-            src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-            alt=""
-          />
-          {option.label} ({option.code}) +{option.phone}
-        </Box>
-      );
-    }}
-    renderInput={(params) => (
-        <TextField
-          {...params}
-          label="Choose a country"
-        //   slotProps={{
-        //     htmlInput: {
-        //       ...params.inputProps,
-        //       autoComplete: 'new-password', // disable autocomplete and autofill
-        //     },
-        //   }}
-        />
-      )}
-  />
+type Props = {
+  initialLat?: number;
+  initialLng?: number;
+  apiKey?: string;
 };
+
+const GeocodingAutocomplete: FC<Props> = ({ initialLat, initialLng, apiKey = 'AIzaSyAjmXiD-nVEaLyalBEB8mUDtLkvCtjID6I' }) => {
+  const [address, setAddress] = useState<string>("");
+  const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
+  const { ref } = usePlacesWidget({
+    apiKey,
+    onPlaceSelected: (place) => {
+      if (place.geometry) {
+        const lat = place.geometry.location.lat();
+        const lng = place.geometry.location.lng();
+        setCoordinates({ lat, lng });
+        setAddress(place.formatted_address || "");
+        console.log("Place selected:", place.formatted_address, lat, lng);
+      }
+    },
+    options: {
+      types: ["geocode", "establishment"],
+    },
+  });
+
+  useEffect(() => {
+    if (initialLat !== undefined && initialLng !== undefined) {
+      const geocoder = new window.google.maps.Geocoder();
+      geocoder.geocode({ location: { lat: initialLat, lng: initialLng } }, (results: any, status: any) => {
+        if (status === "OK" && results[0]) {
+          setAddress(results[0].formatted_address);
+          setCoordinates({ lat: initialLat, lng: initialLng });
+        } else {
+          console.error("Geocode error: ", status);
+        }
+      });
+    }
+  }, [initialLat, initialLng]);
+
+  return (
+    <TextField
+      fullWidth
+      label="Location"
+      inputRef={ref}
+      value={address}
+      onChange={(e) => setAddress(e.target.value)}
+    />
+  );
+};
+
+export default GeocodingAutocomplete;
