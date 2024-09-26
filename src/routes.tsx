@@ -8,6 +8,8 @@ import DriverSignInPage from './features/driverSignIn';
 import LoginPage from './features/login';
 import UserSignInPage from './features/userSignIn';
 import UnauthorizedLayout from './layouts/UnauthorizedLayout';
+import OperatorLoginPage from './features/operatorLogin';
+import AdminLoginPage from './features/adminLogin';
 
 const Home = lazy(() => import('./features/home/Home'));
 const About = lazy(() => import('./features/help/Help'));
@@ -17,6 +19,14 @@ export default function AppRoutes() {
     {
       element: <Home />,
       path: '/',
+    },
+    {
+      element: <OperatorLoginPage />,
+      path: '/operatorLogin',
+    },
+    {
+      element: <AdminLoginPage />,
+      path: '/adminLogin',
     },
     {
       element: <LoginPage />,

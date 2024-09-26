@@ -1,7 +1,8 @@
 enum Roles {
     USER = 1,
     DRIVER = 2,
-    OPERATOR = 3
+    OPERATOR = 3,
+    ADMIN = 4
 }
 enum VehicleType {
     CAR = 1,

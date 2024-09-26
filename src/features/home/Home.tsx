@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router';
 
 export default function Home() {
   const navigate = useNavigate();
-  
+
   const onUserClick = ()=>{
     navigate('/user/dashboard');
   };
@@ -24,7 +24,7 @@ export default function Home() {
         </div>
       </div>
       <div className="home-body">
-
+          
       </div>
     </div>
   );

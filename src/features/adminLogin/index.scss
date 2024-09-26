@@ -1,0 +1,24 @@
+.login-wrapper{
+    display: flex;
+    justify-content: center;
+    margin-top: 100px;
+    // background-image: radial-gradient(at 50% 50%, rgb(240, 247, 255), rgb(255, 255, 255));
+    // background-repeat: no-repeat;
+}
+.login-card{
+    border-radius: 12px !important;
+    box-shadow: rgba(9, 11, 17, 0.05) 0px 5px 15px 0px, rgba(19, 23, 32, 0.05) 0px 15px 35px -5px;
+}
+.tab-item{
+    width: 50%;
+    padding: 22px !important;
+}
+.sign-label{
+    text-align: start;
+}
+.input-item{
+    padding-top: 8px !important;
+    input{
+        padding: 8px 12px !important;
+    }
+}
