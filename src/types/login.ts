@@ -6,7 +6,7 @@ type TLoginData = {
 type TLoggeedData = {
         accountId: number;
         accountStatus: "ACTIVE" | "INACTIVE";
-        accountType: "CUSTOMER" | "ADMIN" | "DRIVER";  
+        accountType: "CUSTOMER" | "ADMIN" | "DRIVER"| 'OPERATOR';  
         email: string;
         name: string;
         password: string;

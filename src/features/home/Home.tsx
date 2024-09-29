@@ -12,6 +12,7 @@ import GeocodingAutocomplete from '../../components/locationSearch';
 import { useEffect, useState } from 'react';
 import { TLocationData } from '../../types/geoLocation';
 
+
 export default function Home() {
   const navigate = useNavigate();
   const [locationData, setLocationData] = useState<TLocationData | undefined>(undefined)

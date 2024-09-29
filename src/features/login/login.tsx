@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router';
 import LogoContainer from '../../components/logoContainer';
 import { TLoggeedData, TLoginData } from '../../types/login';
 import { useLoginMutation } from '../../api/loginApiSlice';
-import { AlertColor } from '@mui/material';
+import { AlertColor, CircularProgress } from '@mui/material';
 import TaxiAlert from '../../components/Alert';
 // import ForgotPassword from './ForgotPassword';
 // import { GoogleIcon, FacebookIcon, SitemarkIcon } from './CustomIcons';
@@ -214,7 +214,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean, loginType:
               variant="body2"
               sx={{ alignSelf: 'center', cursor: 'pointer' }}
             >
-              Sign up
+              {isLoading ? <CircularProgress /> : 'Log in'}
             </Link>
           </span>
         </Typography>
