@@ -14,12 +14,7 @@ const devConfig: AppConfig = {
       defaultSize: 20
     },
   },
-  baseUrl: (w._env_ && w._env_.REACT_APP_BASE_URL) || 'http://10.101.15.207:8000',
-  keycloak: {
-    keycloakUrl: (w._env_ && w._env_.REACT_APP_KEYCLOAK_URL) || 'http://10.101.16.22:8080',
-    realm: (w._env_ && w._env_.REACT_APP_KEYCLOAK_REALM) || 'lbc-dev',
-    clientId: (w._env_ && w._env_.REACT_APP_KEYCLOAK_CLIENT_ID) || 'wms-frontend'
-  },
+  baseUrl: (w._env_ && w._env_.REACT_APP_BASE_URL) || 'http://localhost:8081/citytaxi/v1',
   roles: {
     system_admin: 'System Admin',
     admin: 'Admin',

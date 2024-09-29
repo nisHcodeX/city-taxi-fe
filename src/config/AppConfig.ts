@@ -11,11 +11,6 @@ type AppConfig = {
     }
   };
   baseUrl: string;
-  keycloak: {
-    keycloakUrl: string;
-    realm: string;
-    clientId: string;
-  }
   roles: object,
 
 };

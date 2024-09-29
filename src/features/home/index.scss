@@ -32,6 +32,7 @@
 
 .home-body{
     background-attachment: fixed; 
+    overflow: auto;
 }
 
 .home-body{
@@ -42,4 +43,16 @@
     inset: 0;
     background-image: radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%));
     background-repeat: no-repeat;
+}
+.search-container{
+    display: flex;
+    flex-direction: row;
+    padding: 20px;
+    justify-content: flex-end;
+    gap: 16px;
+    width: 100%;
+    max-width: 1440px;
+    .location{
+        width: 400px;
+    }
 }

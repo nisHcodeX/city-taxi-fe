@@ -14,13 +14,13 @@ type Props = {
   }) => void; 
 };
 
-const GeocodingAutocomplete: FC<Props> = ({ initialLat, initialLng, apiKey = 'AIzaSyAjmXiD-nVEaLyalBEB8mUDtLkvCtjID6I', results }) => {
+const GeocodingAutocomplete: FC<Props> = ({ initialLat, initialLng, results }) => {
   const [address, setAddress] = useState<string>("");
   const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
   const { ref } = usePlacesWidget({
-    apiKey,
+    apiKey : 'AIzaSyAjmXiD-nVEaLyalBEB8mUDtLkvCtjID6I',
     onPlaceSelected: (place) => {
-      if (place.geometry) {
+      if (place?.geometry?.location) {
         const lat = place.geometry.location.lat();
         const lng = place.geometry.location.lng();
         setCoordinates({ lat, lng });
@@ -34,7 +34,7 @@ const GeocodingAutocomplete: FC<Props> = ({ initialLat, initialLng, apiKey = 'AI
   });
 
   useEffect(() => {
-    if (initialLat !== undefined && initialLng !== undefined) {
+    if (initialLat && initialLng) {
       const geocoder = new window.google.maps.Geocoder();
       geocoder.geocode({ location: { lat: initialLat, lng: initialLng } }, (results: any, status: any) => {
         if (status === "OK" && results[0]) {

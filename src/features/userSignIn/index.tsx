@@ -2,6 +2,8 @@ import styled from "@emotion/styled";
 import { Box, Button, Card, CardContent, FormControl, FormLabel, Stack, TextField, Typography } from "@mui/material";
 import LogoContainer from "../../components/logoContainer";
 import { useNavigate } from "react-router";
+import { useLazyGetCustomerQuery, useRegisterMutation } from "../../api/customerApiSlice";
+import { useEffect } from "react";
 
 const SignInContainer = styled(Stack)(({ theme }) => ({
     '&::before': {
@@ -19,9 +21,25 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 export default function UserSignInPage() {
     const navigate = useNavigate ();
 
+    const [triggerRegister, { isLoading }] = useRegisterMutation();
+    const [triggerGetCustomer] = useLazyGetCustomerQuery();
+
+    useEffect(() => {
+        (async () => {
+            const { data, isLoading, isError } = await triggerGetCustomer(4);
+        })()
+    }, []);
+
     const onBackClick = () =>{
         navigate('/login');
     };
+
+    const handleRegister = async () => {
+        triggerRegister({ email: "", name: "", phoneNumber: "" })
+            .unwrap()
+            .then(res => console.log(res))
+            .catch(err => console.log(err));
+;    }
 
     return (
         <SignInContainer>

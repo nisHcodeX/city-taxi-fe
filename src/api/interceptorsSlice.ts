@@ -2,7 +2,8 @@ import {BaseQueryFn, FetchArgs, fetchBaseQuery, FetchBaseQueryError,} from '@red
 import config from '../config';
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: config.baseUrl,
+    // baseUrl: config.baseUrl,
+    baseUrl: "http://localhost:8081/citytaxi/v1",
     prepareHeaders(headers) {
         headers.set('Content-Type', 'application/json')
         return headers;
