@@ -45,6 +45,7 @@ export default function CustomerRegister() {
     };
 
     const handleRegister = async (data: TCreateCustomer) => {
+        setMessage(null);
         triggerRegister(data)
             .unwrap()
             .then(res => {setMessage({message: 'Successfuly registered customer please check your email to login', type: 'success'})})

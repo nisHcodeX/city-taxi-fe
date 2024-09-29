@@ -122,7 +122,9 @@ const SideNav = ({ open, onDrawerOpen, onDrawerClose }: any) => {
   };
 
   const driverLogut = () => {
+    localStorage.removeItem('account');
     navigate('/login');
+    
   };
 
 

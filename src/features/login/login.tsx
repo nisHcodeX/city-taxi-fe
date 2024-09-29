@@ -17,6 +17,10 @@ import ForgotPassword from './ForgotPassword';
 import { Roles } from '../../const';
 import { useNavigate } from 'react-router';
 import LogoContainer from '../../components/logoContainer';
+import { TLoggeedData, TLoginData } from '../../types/login';
+import { useLoginMutation } from '../../api/loginApiSlice';
+import { AlertColor } from '@mui/material';
+import TaxiAlert from '../../components/Alert';
 // import ForgotPassword from './ForgotPassword';
 // import { GoogleIcon, FacebookIcon, SitemarkIcon } from './CustomIcons';
 // import AppTheme from '../shared-theme/AppTheme';
@@ -58,27 +62,28 @@ export default function SignIn(props: { disableCustomTheme?: boolean, loginType:
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
+  const [triggerLogin, { isLoading }] = useLoginMutation();
+  const [message, setMessage] = React.useState<{message: string, type: AlertColor}| null>(null);
   const navigate = useNavigate()
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const loginSuccess = (res: TLoggeedData) => {
+    localStorage.setItem('account', JSON.stringify(res));
+    if(res.accountType == "CUSTOMER"){
+      navigate('/');
+    }else{
+      navigate('driver/dashboard')
+    }
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    if(props.loginType == Roles.USER){
-      navigate(`/user/dashboard`);
-    }else if (props.loginType == Roles.DRIVER){
-      navigate(`/driver/dashboard`);
-    }
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+  const handleSubmit = (data: TLoginData) => {
+    setMessage(null)
+    triggerLogin(data)
+    .unwrap()
+    .then(res => loginSuccess(res))
+    .catch(err => setMessage({message: err?.data?.message, type: 'error'}));
   };
 
   const onSingupNavigate = () => {
@@ -106,18 +111,19 @@ export default function SignIn(props: { disableCustomTheme?: boolean, loginType:
 
     if (!password.value || password.value.length < 6) {
       setPasswordError(true);
-      setPasswordErrorMessage('Password must be at least 6 characters long.');
+      setPasswordErrorMessage('Password Error.');
       isValid = false;
     } else {
       setPasswordError(false);
       setPasswordErrorMessage('');
     }
 
-    return isValid;
+    if(isValid) handleSubmit({username: email.value, password: password.value});
   };
 
   return (
     <SignInContainer direction="column" justifyContent="space-between">
+      {message && <TaxiAlert text={message.message} severity={message.type} onClose={()=>setMessage(null)}/>}
       <Box>
       <LogoContainer/>
       <Typography
@@ -130,7 +136,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean, loginType:
       </Box>
       <Box
         component="form"
-        onSubmit={handleSubmit}
+        // onSubmit={handleSubmit}
         noValidate
         sx={{
           display: 'flex',
@@ -161,14 +167,14 @@ export default function SignIn(props: { disableCustomTheme?: boolean, loginType:
         <FormControl>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <FormLabel htmlFor="password">Password</FormLabel>
-            <Link
+            {/* <Link
               component="button"
               onClick={handleClickOpen}
               variant="body2"
               sx={{ alignSelf: 'baseline' }}
             >
               Forgot your password?
-            </Link>
+            </Link> */}
           </Box>
           <TextField
             className='input-item'
@@ -190,10 +196,10 @@ export default function SignIn(props: { disableCustomTheme?: boolean, loginType:
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             /> */}
-        <ForgotPassword open={open} handleClose={handleClose} loginType={props.loginType} />
+        {/* <ForgotPassword open={open} handleClose={handleClose} loginType={props.loginType} /> */}
         <Button
           sx={{ marginTop: '16px' }}
-          type="submit"
+          type="button"
           fullWidth
           variant="contained"
           onClick={validateInputs}

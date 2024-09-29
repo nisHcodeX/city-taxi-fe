@@ -2,8 +2,7 @@ import {BaseQueryFn, FetchArgs, fetchBaseQuery, FetchBaseQueryError,} from '@red
 import config from '../config';
 
 const baseQuery = fetchBaseQuery({
-    // baseUrl: config.baseUrl,
-    baseUrl: "http://localhost:8081/citytaxi/v1",
+    baseUrl: 'http://localhost:8081/citytaxi/v1/',
     prepareHeaders(headers) {
         headers.set('Content-Type', 'application/json')
         return headers;
@@ -17,15 +16,15 @@ export const baseQueryWithReauth: BaseQueryFn<string | FetchArgs,
     console.info('interceptors', result);
     if (result.error && result.error.status === 401) {
         // try to get a new token
-        const refreshResult = await baseQuery('/refreshToken', api, extraOptions);
-        if (refreshResult.data) {
-            // store the new token
-            // api.dispatch(tokenReceived(refreshResult.data))
-            // retry the initial query
-            result = await baseQuery(args, api, extraOptions)
-        } else {
-            // api.dispatch(loggedOut())
-        }
+        // const refreshResult = await baseQuery('/refreshToken', api, extraOptions);
+        // if (refreshResult.data) {
+        //     // store the new token
+        //     // api.dispatch(tokenReceived(refreshResult.data))
+        //     // retry the initial query
+        //     result = await baseQuery(args, api, extraOptions)
+        // } else {
+        //     // api.dispatch(loggedOut())
+        // }
     }
     return result
 };

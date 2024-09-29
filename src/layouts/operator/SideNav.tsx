@@ -122,6 +122,7 @@ const SideNav = ({ open, onDrawerOpen, onDrawerClose }: any) => {
   };
 
   const operatorLogut = () => {
+    localStorage.removeItem('account');
     navigate('/operatorLogin');
   };
 

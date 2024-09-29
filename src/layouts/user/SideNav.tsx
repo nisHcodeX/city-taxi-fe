@@ -122,6 +122,7 @@ const SideNav = ({ open, onDrawerOpen, onDrawerClose }: any) => {
   };
 
   const userLogut = () => {
+    localStorage.removeItem('account');
     navigate('/login');
   };
 
@@ -180,7 +181,7 @@ const SideNav = ({ open, onDrawerOpen, onDrawerClose }: any) => {
             <ListItemText primary={t('rides')} sx={{ opacity: open ? 1 : 0 }} />
           </ListItemButton>
         </ListItem>
-        <ListItem key={'Logout'} disablePadding sx={{ display: 'block', marginTop: 'auto' }}>
+        <ListItem key={'Logout'} disablePadding sx={{ display: 'block', marginTop: 'auto' }} onClick={userLogut}>
           <ListItemButton
             sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5 }}
             onClick={() => {

@@ -122,6 +122,7 @@ const SideNav = ({ open, onDrawerOpen, onDrawerClose }: any) => {
     onDrawerClose(false);
   };
   const adminLogut = () => {
+    localStorage.removeItem('account');
     navigate('/adminLogin');
   };
 
