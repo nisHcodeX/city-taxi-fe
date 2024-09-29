@@ -1,9 +1,11 @@
 import styled from "@emotion/styled";
-import { Box, Button, Card, CardContent, FormControl, FormLabel, Stack, TextField, Typography } from "@mui/material";
+import { AlertColor, Box, Button, Card, CardContent, CircularProgress, FormControl, FormLabel, Stack, TextField, Typography } from "@mui/material";
 import LogoContainer from "../../components/logoContainer";
 import { useNavigate } from "react-router";
 import { useLazyGetCustomerQuery, useRegisterMutation } from "../../api/customerApiSlice";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
+import { TCreateCustomer } from "../../types/customer";
+import TaxiAlert from "../../components/Alert";
 
 const SignInContainer = styled(Stack)(({ theme }) => ({
     '&::before': {
@@ -18,36 +20,89 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
     },
 }));
 
-export default function UserSignInPage() {
-    const navigate = useNavigate ();
-
+export default function CustomerRegister() {
+    const navigate = useNavigate();
     const [triggerRegister, { isLoading }] = useRegisterMutation();
     const [triggerGetCustomer] = useLazyGetCustomerQuery();
 
-    useEffect(() => {
-        (async () => {
-            const { data, isLoading, isError } = await triggerGetCustomer(4);
-        })()
-    }, []);
+    const [firstNameError, setFirstNameError] = React.useState(false);
+    const [firstNameErrorMessage, setFirstNameErrorMessage] = React.useState('');
+    const [lastNameError, setLastNameError] = React.useState(false);
+    const [lastNameErrorMessage, setLastNameErrorMessage] = React.useState('');
+    const [emailError, setEmailError] = React.useState(false);
+    const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
+    const [phoneNumberError, setPhoneNumberError] = React.useState(false);
+    const [phoneNumberErrorMessage, setPhoneNumberErrorMessage] = React.useState('');
+    const [message, setMessage] = React.useState<{message: string, type: AlertColor}| null>(null);
+    // useEffect(() => {
+    //     (async () => {
+    //         const { data, isLoading, isError } = await triggerGetCustomer(4);
+    //     })()
+    // }, []);
 
-    const onBackClick = () =>{
+    const onBackClick = () => {
         navigate('/login');
     };
 
-    const handleRegister = async () => {
-        triggerRegister({ email: "", name: "", phoneNumber: "" })
+    const handleRegister = async (data: TCreateCustomer) => {
+        triggerRegister(data)
             .unwrap()
-            .then(res => console.log(res))
-            .catch(err => console.log(err));
-;    }
+            .then(res => {setMessage({message: 'Successfuly registered customer please check your email to login', type: 'success'})})
+            .catch(err => setMessage({message: err?.data?.message, type: 'error'}));
+    };
+
+    const validateInputs = () => {
+
+        const firstName = document.getElementById('firstName') as HTMLInputElement;
+        const lastName = document.getElementById('lastName') as HTMLInputElement;
+        const email = document.getElementById('email') as HTMLInputElement;
+        const phoneNumber = document.getElementById('phoneNumber') as HTMLInputElement;
+
+        let isValid = true;
+
+        if (!firstName.value) {
+            setFirstNameError(true);
+            setFirstNameErrorMessage('Please enter first name');
+            isValid = false;
+        } else {
+            setFirstNameError(false);
+            setFirstNameErrorMessage('');
+        }
+        if (!lastName.value) {
+            setLastNameError(true);
+            setLastNameErrorMessage('Please enter last name');
+            isValid = false;
+        } else {
+            setLastNameError(false);
+            setLastNameErrorMessage('');
+        }
+        if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
+            setEmailError(true);
+            setEmailErrorMessage('Please enter a valid email address.');
+            isValid = false;
+        } else {
+            setEmailError(false);
+            setEmailErrorMessage('');
+        }
+        if (!phoneNumber.value || !/^\+94\d{9}$/.test(phoneNumber.value)) {
+            setPhoneNumberErrorMessage('Please enter a valid phone number.');
+            isValid = false;
+        } else {
+            setPhoneNumberError(false);
+            setPhoneNumberErrorMessage('');
+        }
+
+        if (isValid) handleRegister({ name: firstName.value, email: email.value, phoneNumber: phoneNumber.value });
+    };
 
     return (
         <SignInContainer>
+            {message && <TaxiAlert text={message.message} severity={message.type} onClose={()=>setMessage(null)}/>}
             <Box sx={{ width: '100%', typography: 'body1', marginTop: '50px' }} className="login-wrapper"
             >
                 <CardContent sx={{ width: '600px' }}>
                     <Card variant='outlined' className="login-card">
-                        <Box sx={{paddingTop: '20px'}}>
+                        <Box sx={{ paddingTop: '20px' }}>
                             <LogoContainer />
                         </Box>
                         <Typography
@@ -71,8 +126,8 @@ export default function UserSignInPage() {
                                 <FormLabel className="sign-label" htmlFor="firstName">First Name</FormLabel>
                                 <TextField
                                     className="input-item"
-                                    // error={emailError}
-                                    // helperText={emailErrorMessage}
+                                    error={firstNameError}
+                                    helperText={firstNameErrorMessage}
                                     id="firstName"
                                     type="firstName"
                                     name="firstName"
@@ -82,7 +137,7 @@ export default function UserSignInPage() {
                                     required
                                     fullWidth
                                     variant="outlined"
-                                    // color={emailError ? 'error' : 'primary'}
+                                    color={firstNameError ? 'error' : 'primary'}
                                     sx={{ ariaLabel: 'email' }}
                                 />
                             </FormControl>
@@ -90,8 +145,8 @@ export default function UserSignInPage() {
                                 <FormLabel className="sign-label" htmlFor="lastName">Last Name</FormLabel>
                                 <TextField
                                     className="input-item"
-                                    // error={emailError}
-                                    // helperText={emailErrorMessage}
+                                    error={lastNameError}
+                                    helperText={lastNameErrorMessage}
                                     id="lastName"
                                     type="lastName"
                                     name="lastName"
@@ -101,7 +156,7 @@ export default function UserSignInPage() {
                                     required
                                     fullWidth
                                     variant="outlined"
-                                    // color={emailError ? 'error' : 'primary'}
+                                    color={lastNameError ? 'error' : 'primary'}
                                     sx={{ ariaLabel: 'email' }}
                                 />
                             </FormControl>
@@ -109,8 +164,8 @@ export default function UserSignInPage() {
                                 <FormLabel className="sign-label" htmlFor="email">Email</FormLabel>
                                 <TextField
                                     className="input-item"
-                                    // error={emailError}
-                                    // helperText={emailErrorMessage}
+                                    error={emailError}
+                                    helperText={emailErrorMessage}
                                     id="email"
                                     type="email"
                                     name="email"
@@ -120,7 +175,7 @@ export default function UserSignInPage() {
                                     required
                                     fullWidth
                                     variant="outlined"
-                                    // color={emailError ? 'error' : 'primary'}
+                                    color={emailError ? 'error' : 'primary'}
                                     sx={{ ariaLabel: 'email' }}
                                 />
                             </FormControl>
@@ -128,22 +183,22 @@ export default function UserSignInPage() {
                                 <FormLabel className="sign-label" htmlFor="phoneNumber">Phone Number</FormLabel>
                                 <TextField
                                     className="input-item"
-                                    // error={emailError}
-                                    // helperText={emailErrorMessage}
+                                    error={phoneNumberError}
+                                    helperText={phoneNumberErrorMessage}
                                     id="phoneNumber"
                                     type="phoneNumber"
                                     name="phoneNumber"
-                                    placeholder="phone number"
+                                    placeholder="+94123456789"
                                     autoComplete="phoneNumber"
                                     autoFocus
                                     required
                                     fullWidth
                                     variant="outlined"
-                                    // color={emailError ? 'error' : 'primary'}
-                                    sx={{ ariaLabel: 'email' }}
+                                    color={phoneNumberError ? 'error' : 'primary'}
+                                    sx={{ ariaLabel: 'phonenumber' }}
                                 />
                             </FormControl>
-                            <FormControl>
+                            {/* <FormControl>
                                 <FormLabel className="sign-label" htmlFor="password">Password</FormLabel>
                                 <TextField
                                     className="input-item"
@@ -180,18 +235,18 @@ export default function UserSignInPage() {
                                     // color={emailError ? 'error' : 'primary'}
                                     sx={{ ariaLabel: 'email' }}
                                 />
-                            </FormControl>
+                            </FormControl> */}
                             <Button
-                                type="submit"
+                                type="button"
                                 variant="contained"
-                            // onClick={validateInputs}
+                                onClick={validateInputs}
                             >
-                                Sign in
+                                {isLoading ? <CircularProgress /> : 'Sign in'}
                             </Button>
                             <Button
                                 type="button"
                                 variant="outlined"
-                            onClick={onBackClick}
+                                onClick={onBackClick}
                             >
                                 Back
                             </Button>
