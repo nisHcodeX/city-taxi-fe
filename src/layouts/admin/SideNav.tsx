@@ -4,6 +4,8 @@ import {
   ChevronLeft,
   ChevronRight,
   ErrorOutline,
+  ExitToApp,
+  Height,
   Home,
 } from '@mui/icons-material';
 import {
@@ -119,6 +121,9 @@ const SideNav = ({ open, onDrawerOpen, onDrawerClose }: any) => {
   const handleDrawerClose = () => {
     onDrawerClose(false);
   };
+  const adminLogut = () => {
+    navigate('/adminLogin');
+  };
 
   return (
     <Drawer variant="permanent" open={open}>
@@ -135,7 +140,7 @@ const SideNav = ({ open, onDrawerOpen, onDrawerClose }: any) => {
         </IconButton>
       </DrawerHeader>
       <Divider />
-      <List>
+      <List sx={{height: '100%', display: 'flex', flexDirection: 'column'}}>
         <ListItem key={'Dashboard'} disablePadding sx={{ display: 'block' }}>
           <ListItemButton
             sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5 }}
@@ -173,6 +178,19 @@ const SideNav = ({ open, onDrawerOpen, onDrawerClose }: any) => {
               <CalculateOutlined />
             </ListItemIcon>
             <ListItemText primary={t('rides')} sx={{ opacity: open ? 1 : 0 }} />
+          </ListItemButton>
+        </ListItem>
+        <ListItem key={'Logout'} disablePadding sx={{ display: 'block', marginTop: 'auto' }}>
+          <ListItemButton
+            sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5 }}
+            onClick={() => {
+              adminLogut();
+            }}
+          >
+            <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
+              < ExitToApp/>
+            </ListItemIcon>
+            <ListItemText primary={t('Logout')} sx={{ opacity: open ? 1 : 0 }} />
           </ListItemButton>
         </ListItem>
       </List>

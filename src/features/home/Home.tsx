@@ -1,10 +1,12 @@
-import { ListItemIcon } from '@mui/material';
+import { Box, ListItemIcon } from '@mui/material';
 import LogoContainer from '../../components/logoContainer';
 import './index.scss';
 import {
   MenuOutlined,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router';
+import TaxiCard from '../../components/taxiCard';
+import { VehicleType } from '../../const';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -23,9 +25,11 @@ export default function Home() {
           </ListItemIcon>
         </div>
       </div>
-      <div className="home-body">
-          
-      </div>
+      <Box className="home-body" sx={{marginTop: '80px', display: 'flex', flexDirection: 'column', height: 'calc(100vh - 80px)', position: 'absolute', width: '100%', alignItems: 'center'}} >
+          <TaxiCard vehicleType={VehicleType.BIKE}/>
+          <TaxiCard vehicleType={VehicleType.CAR}/>
+          <TaxiCard vehicleType={VehicleType.BIKE}/>
+      </Box>
     </div>
   );
 }
