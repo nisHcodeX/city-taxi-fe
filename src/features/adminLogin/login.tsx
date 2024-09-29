@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import TaxiAlert from '../../components/Alert';
 import Checkbox from '@mui/material/Checkbox';
 import CssBaseline from '@mui/material/CssBaseline';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -16,6 +17,9 @@ import { styled } from '@mui/material/styles';
 import { Roles } from '../../const';
 import { useNavigate } from 'react-router';
 import LogoContainer from '../../components/logoContainer';
+import { AlertColor, CircularProgress } from '@mui/material';
+import { useLoginMutation } from '../../api/loginApiSlice';
+import { TLoggeedData, TLoginData } from '../../types/login';
 
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -54,6 +58,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean, loginType:
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
+  const [triggerLogin, { isLoading }] = useLoginMutation();
+  const [message, setMessage] = React.useState<{message: string, type: AlertColor}| null>(null);
   const navigate = useNavigate()
   const handleClickOpen = () => {
     setOpen(true);
@@ -63,14 +69,19 @@ export default function SignIn(props: { disableCustomTheme?: boolean, loginType:
     setOpen(false);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
+  const loginSuccess = (res: TLoggeedData) => {
+    localStorage.setItem('account', JSON.stringify(res));
+    if(res.accountType == "ADMIN"){
       navigate(`/admin/dashboard`);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    }
+  };
+
+  const handleSubmit = (data: TLoginData) => {
+    setMessage(null);
+    triggerLogin(data)
+    .unwrap()
+    .then(res => loginSuccess(res))
+    .catch(err => setMessage({message: err?.data?.message, type: 'error'}));
   };
 
   const validateInputs = () => {
@@ -97,11 +108,12 @@ export default function SignIn(props: { disableCustomTheme?: boolean, loginType:
       setPasswordErrorMessage('');
     }
 
-    return isValid;
+    if(isValid) handleSubmit({username: email.value, password: password.value});
   };
 
   return (
     <SignInContainer direction="column" justifyContent="space-between">
+      {message && <TaxiAlert text={message.message} severity={message.type} onClose={()=>setMessage(null)}/>}
       <Box>
       <LogoContainer/>
       <Typography
@@ -114,7 +126,6 @@ export default function SignIn(props: { disableCustomTheme?: boolean, loginType:
       </Box>
       <Box
         component="form"
-        onSubmit={handleSubmit}
         noValidate
         sx={{
           display: 'flex',
@@ -165,12 +176,12 @@ export default function SignIn(props: { disableCustomTheme?: boolean, loginType:
         {/* <ForgotPassword open={open} handleClose={handleClose} loginType={props.loginType} /> */}
         <Button
           sx={{ marginTop: '16px' }}
-          type="submit"
+          type="button"
           fullWidth
           variant="contained"
           onClick={validateInputs}
         >
-          Log in
+          {isLoading ? <CircularProgress /> : 'Log in'}
         </Button>
       </Box>
     </SignInContainer>
