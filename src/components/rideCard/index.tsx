@@ -20,7 +20,7 @@ export default function RideCrd({ vehicleType, showButton, onCompleteRide }: Tax
                         {vehicleType == VehicleType.CAR ? <img src={TaxiCar} /> : <img src={TaxiBike} />}
                     </div>
                     <div className="taxt-card-content">
-                        <div className="title">BMW X5 Chicago 2008</div>
+                        <div className="title">{vehicleType == VehicleType.CAR ? 'Aqua': 'Fz-v2'}</div>
                         <div className="detail">Per km : {vehicleType == VehicleType.CAR ? 'Rs: 250.00': 'Rs: 150.00'}</div>
                         <div className="detail">Passenger Count : {vehicleType == VehicleType.CAR ? 4: 1}</div>
                         <div className="detail">Vehicle Number: {vehicleType == VehicleType.CAR ? 'AB-52476': 'CAD-2059'}</div>

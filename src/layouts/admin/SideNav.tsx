@@ -5,8 +5,11 @@ import {
   ChevronRight,
   ErrorOutline,
   ExitToApp,
-  Height,
+  AccountCircle,
   Home,
+  SupportAgent,
+  LocalTaxi,
+  AccessTime
 } from '@mui/icons-material';
 import {
   ButtonBase,
@@ -141,7 +144,7 @@ const SideNav = ({ open, onDrawerOpen, onDrawerClose }: any) => {
         </IconButton>
       </DrawerHeader>
       <Divider />
-      <List sx={{height: '100%', display: 'flex', flexDirection: 'column'}}>
+      <List sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
         <ListItem key={'Dashboard'} disablePadding sx={{ display: 'block' }}>
           <ListItemButton
             sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5 }}
@@ -153,6 +156,58 @@ const SideNav = ({ open, onDrawerOpen, onDrawerClose }: any) => {
               <Home />
             </ListItemIcon>
             <ListItemText primary={t('dashboard')} sx={{ opacity: open ? 1 : 0 }} />
+          </ListItemButton>
+        </ListItem>
+        <ListItem key={'Operators'} disablePadding sx={{ display: 'block' }}>
+          <ListItemButton
+            sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5 }}
+            onClick={() => {
+              navigate(`/admin/operator`);
+            }}
+          >
+            <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
+              < SupportAgent />
+            </ListItemIcon>
+            <ListItemText primary={t('Operators')} sx={{ opacity: open ? 1 : 0 }} />
+          </ListItemButton>
+        </ListItem>
+        <ListItem key={'Drivers'} disablePadding sx={{ display: 'block' }}>
+          <ListItemButton
+            sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5 }}
+            onClick={() => {
+              navigate(`/admin/driver`);
+            }}
+          >
+            <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
+              <CalculateOutlined />
+            </ListItemIcon>
+            <ListItemText primary={t('Drivers')} sx={{ opacity: open ? 1 : 0 }} />
+          </ListItemButton>
+        </ListItem>
+        <ListItem key={'Customers'} disablePadding sx={{ display: 'block' }}>
+          <ListItemButton
+            sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5 }}
+            onClick={() => {
+              navigate(`/admin/customer`);
+            }}
+          >
+            <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
+              <AccountCircle />
+            </ListItemIcon>
+            <ListItemText primary={t('Customers')} sx={{ opacity: open ? 1 : 0 }} />
+          </ListItemButton>
+        </ListItem>
+        <ListItem key={'Booking'} disablePadding sx={{ display: 'block' }}>
+          <ListItemButton
+            sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5 }}
+            onClick={() => {
+              navigate(`/admin/rides`);
+            }}
+          >
+            <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
+              <AccessTime />
+            </ListItemIcon>
+            <ListItemText primary={t('Bookings')} sx={{ opacity: open ? 1 : 0 }} />
           </ListItemButton>
         </ListItem>
         <ListItem key={'Profile'} disablePadding sx={{ display: 'block' }}>
@@ -168,19 +223,6 @@ const SideNav = ({ open, onDrawerOpen, onDrawerClose }: any) => {
             <ListItemText primary={t('profile')} sx={{ opacity: open ? 1 : 0 }} />
           </ListItemButton>
         </ListItem>
-        <ListItem key={'Rides'} disablePadding sx={{ display: 'block' }}>
-          <ListItemButton
-            sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5 }}
-            onClick={() => {
-              navigate(`/admin/rides`);
-            }}
-          >
-            <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
-              <CalculateOutlined />
-            </ListItemIcon>
-            <ListItemText primary={t('rides')} sx={{ opacity: open ? 1 : 0 }} />
-          </ListItemButton>
-        </ListItem>
         <ListItem key={'Logout'} disablePadding sx={{ display: 'block', marginTop: 'auto' }}>
           <ListItemButton
             sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5 }}
@@ -189,7 +231,7 @@ const SideNav = ({ open, onDrawerOpen, onDrawerClose }: any) => {
             }}
           >
             <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
-              < ExitToApp/>
+              < ExitToApp />
             </ListItemIcon>
             <ListItemText primary={t('Logout')} sx={{ opacity: open ? 1 : 0 }} />
           </ListItemButton>

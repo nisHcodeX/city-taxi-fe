@@ -95,7 +95,7 @@ export default function Home() {
           </div>
         </div>
         {
-          isLoading && <CircularProgress />
+          isLoading ? <CircularProgress /> : 'Add booking'
         }
 
         <TaxiCard vehicleType={VehicleType.BIKE} onRideBook={() => onBook()} />

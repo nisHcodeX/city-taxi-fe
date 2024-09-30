@@ -1,7 +1,6 @@
 import { Box, Button, CircularProgress, FormControl, FormLabel, MenuItem, Select, TextField } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import './index.scss'
-import TaxiCard from '../../components/taxiCard';
 import TaxiDialog from '../../components/Dialog/TaxtDialog';
 import React, { useState } from 'react';
 import { useAddVehicleMutation } from '../../api/vehicleApiSlice';
