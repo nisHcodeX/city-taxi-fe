@@ -13,10 +13,10 @@ const UserRoutes = {
       path: 'dashboard',
       element: <DashboardPage />,
     },
-    {
-      path: 'rides',
-      element: <RidesPage />,
-    },
+    // {
+    //   path: 'rides',
+    //   element: <RidesPage />,
+    // },
     {
       path: 'profile',
       element: <ProfilePage />,

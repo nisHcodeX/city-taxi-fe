@@ -23,13 +23,6 @@ export default function TaxiDialog({ open, handleClose, children, title, infoTex
     <Dialog
       open={open}
       onClose={handleClose}
-      PaperProps={{
-        component: 'form',
-        onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
-          event.preventDefault();
-          handleClose();
-        },
-      }}
     >
       <DialogTitle>{title}</DialogTitle>
       <DialogContent

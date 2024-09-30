@@ -17,5 +17,15 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+}
+.location-error{
+    margin: 0;
+    text-align: start;
+    padding-left: 16px;
+    color: red;
+    font-size: 12px;
+}
+.profile-wrapper{
+    display: flex;
+    justify-content: center;
 }

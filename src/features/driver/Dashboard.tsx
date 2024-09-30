@@ -205,7 +205,6 @@ export default function Dashboard() {
           <div className='vehicle-container'>
             <DriverCard vehicleType={1}  />
             <DriverCard vehicleType={2}  />
-            <DriverCard vehicleType={2}  />
           </div>
         </div>
       </div>
