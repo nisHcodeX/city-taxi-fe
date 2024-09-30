@@ -21,6 +21,7 @@ import { TLoggeedData, TLoginData } from '../../types/login';
 import { useLoginMutation } from '../../api/loginApiSlice';
 import { AlertColor, CircularProgress } from '@mui/material';
 import TaxiAlert from '../../components/Alert';
+import GeocodingAutocomplete from '../../components/locationSearch';
 // import ForgotPassword from './ForgotPassword';
 // import { GoogleIcon, FacebookIcon, SitemarkIcon } from './CustomIcons';
 // import AppTheme from '../shared-theme/AppTheme';
@@ -74,7 +75,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean, loginType:
     if(res.accountType == "CUSTOMER"){
       navigate('/');
     }else{
-      navigate('driver/dashboard')
+      navigate('/driver/dashboard')
     }
   };
 
@@ -192,11 +193,6 @@ export default function SignIn(props: { disableCustomTheme?: boolean, loginType:
             color={passwordError ? 'error' : 'primary'}
           />
         </FormControl>
-        {/* <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            /> */}
-        {/* <ForgotPassword open={open} handleClose={handleClose} loginType={props.loginType} /> */}
         <Button
           sx={{ marginTop: '16px' }}
           type="button"
@@ -204,7 +200,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean, loginType:
           variant="contained"
           onClick={validateInputs}
         >
-          Log in
+          {isLoading ? <CircularProgress /> : 'Log in'}
         </Button>
         <Typography sx={{ textAlign: 'center' }}>
           Don&apos;t have an account?{' '}
@@ -214,7 +210,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean, loginType:
               variant="body2"
               sx={{ alignSelf: 'center', cursor: 'pointer' }}
             >
-              {isLoading ? <CircularProgress /> : 'Log in'}
+              sign up
             </Link>
           </span>
         </Typography>

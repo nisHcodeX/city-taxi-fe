@@ -1,17 +1,17 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { Card, CardContent, Stack } from '@mui/material';
-import DriverDetailsPage from './driverDetails';
-import VehicleDetailsPage from './vehicleDetails';
-import FinalDetailsPage from './finalPage';
+import { AlertColor, Card, CardContent, CircularProgress, FormControl, FormLabel, Stack, TextField } from '@mui/material';
 import { useNavigate } from 'react-router';
 import LogoContainer from '../../components/logoContainer';
 import styled from '@emotion/styled';
+import { useRegisterMutation } from '../../api/driverApiSlice';
+import { TCreateDriver } from '../../types/driver';
+import GeocodingAutocomplete from '../../components/locationSearch';
+import { TLocationData } from '../../types/geoLocation';
+import TaxiAlert from '../../components/Alert';
+import './index.scss';
 
 
 const SignInContainer = styled(Stack)(({ theme }) => ({
@@ -27,123 +27,207 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
     },
 }));
 
-const steps = ['Driver Details', 'Vehicle Details', 'Registration Details'];
 
 export default function DriverSignInPage() {
     const navigate = useNavigate();
-    const [activeStep, setActiveStep] = React.useState(0);
-    const [skipped, setSkipped] = React.useState(new Set<number>());
+    const [triggerRegister, { isLoading }] = useRegisterMutation();
 
-    const isStepOptional = (step: number) => {
-        return step === 1;
+    const [firstNameError, setFirstNameError] = React.useState(false);
+    const [firstNameErrorMessage, setFirstNameErrorMessage] = React.useState('');
+    const [lastNameError, setLastNameError] = React.useState(false);
+    const [lastNameErrorMessage, setLastNameErrorMessage] = React.useState('');
+    const [emailError, setEmailError] = React.useState(false);
+    const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
+    const [phoneNumberError, setPhoneNumberError] = React.useState(false);
+    const [phoneNumberErrorMessage, setPhoneNumberErrorMessage] = React.useState('');
+    const [locationError, setLocationError] = React.useState(false);
+    const [message, setMessage] = React.useState<{ message: string, type: AlertColor } | null>(null);
+    const [locationData, setLocationData] = React.useState<TLocationData | undefined>(undefined)
+
+    const onBackClick = () => {
+        navigate('/login');
     };
 
-    const isStepSkipped = (step: number) => {
-        return skipped.has(step);
+    const handleRegister = async (data: TCreateDriver) => {
+        setMessage(null);
+        triggerRegister(data)
+            .unwrap()
+            .then(res => { setMessage({ message: 'Successfuly registered driver please check your email to login', type: 'success' }) })
+            .catch(err => setMessage({ message: err?.data?.message, type: 'error' }));
     };
 
-    const handleNext = () => {
-        let newSkipped = skipped;
-        if (isStepSkipped(activeStep)) {
-            newSkipped = new Set(newSkipped.values());
-            newSkipped.delete(activeStep);
+    const validateInputs = () => {
+
+        const firstName = document.getElementById('firstName') as HTMLInputElement;
+        const driverLicense = document.getElementById('driverLicense') as HTMLInputElement;
+        const email = document.getElementById('email') as HTMLInputElement;
+        const phoneNumber = document.getElementById('phoneNumber') as HTMLInputElement;
+
+        let isValid = true;
+
+        if (!firstName.value) {
+            setFirstNameError(true);
+            setFirstNameErrorMessage('Please enter first name');
+            isValid = false;
+        } else {
+            setFirstNameError(false);
+            setFirstNameErrorMessage('');
         }
-        if (activeStep === steps.length - 1) {
-            navigate('/login');
+        if (!driverLicense.value || !/^\d+$/.test(driverLicense.value)) {
+            setLastNameError(true);
+            setLastNameErrorMessage('Please enter a valid Driver license');
+            isValid = false;
+        } else {
+            setLastNameError(false);
+            setLastNameErrorMessage('');
+        }        
+        if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
+            setEmailError(true);
+            setEmailErrorMessage('Please enter a valid email address.');
+            isValid = false;
+        } else {
+            setEmailError(false);
+            setEmailErrorMessage('');
         }
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
-        setSkipped(newSkipped);
-    };
-
-    const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
-
-    const handleSkip = () => {
-        if (!isStepOptional(activeStep)) {
-            // You probably want to guard against something like this,
-            // it should never occur unless someone's actively trying to break something.
-            throw new Error("You can't skip a step that isn't optional.");
+        if (!phoneNumber.value || !/^\+94\d{9}$/.test(phoneNumber.value)) {
+            setPhoneNumberErrorMessage('Please enter a valid phone number.');
+            isValid = false;
+        } else {
+            setPhoneNumberError(false);
+            setPhoneNumberErrorMessage('');
         }
-
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
-        setSkipped((prevSkipped) => {
-            const newSkipped = new Set(prevSkipped.values());
-            newSkipped.add(activeStep);
-            return newSkipped;
-        });
-    };
-
-    const handleReset = () => {
-        setActiveStep(0);
-    };
-
-    const stepDrawer = React.useCallback(() => {
-        console.log('activeStep', activeStep)
-        switch (activeStep) {
-            case 0: return <DriverDetailsPage />
-            case 1: return <VehicleDetailsPage />
-            case 2: return <FinalDetailsPage />
+        
+        if (!locationData || !locationData?.address) {
+            setLocationError(true);
+        } else {
+            setLocationError(false);
         }
 
-    }, [activeStep]);
+        if (isValid && locationData?.address) handleRegister({ name: firstName.value, email: email.value, phoneNumber: phoneNumber.value, driverLicense: driverLicense.value, latitude: locationData.lat , longitude: locationData.lng });
+    };
 
 
     return (
         <SignInContainer>
+            {message && <TaxiAlert text={message.message} severity={message.type} onClose={() => setMessage(null)} />}
             <Box sx={{ width: '100%', typography: 'body1' }} className={'login-wrapper'}>
                 <CardContent sx={{ width: '800px' }}>
                     <Card variant='outlined' className='login-card'>
                         <Box sx={{ padding: '20px 20px 0px 20px' }}>
                             <LogoContainer />
                         </Box>
-                        <Stepper activeStep={activeStep} sx={{ padding: '20px' }}>
-                            {steps.map((label, index) => {
-                                const stepProps: { completed?: boolean } = {};
-                                const labelProps: {
-                                    optional?: React.ReactNode;
-                                } = {};
-                                if (isStepSkipped(index)) {
-                                    stepProps.completed = false;
-                                }
-                                return (
-                                    <Step key={label} {...stepProps}>
-                                        <StepLabel {...labelProps}>{label}</StepLabel>
-                                    </Step>
-                                );
-                            })}
-                        </Stepper>
-                        {activeStep === steps.length ? (
-                            <React.Fragment>
-                                <Typography sx={{ mt: 2, mb: 1 }}>
-                                    success
-                                </Typography>
-                                <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                                    <Box sx={{ flex: '1 1 auto' }} />
-                                    <Button onClick={handleReset}>Reset</Button>
-                                </Box>
-                            </React.Fragment>
-                        ) : (
-                            <React.Fragment>
-                                <Typography sx={{ mt: 2, mb: 1 }}>
-                                    {stepDrawer()}
-                                </Typography>
-                                <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                                    <Button
-                                        color="inherit"
-                                        disabled={activeStep === 0}
-                                        onClick={handleBack}
-                                        sx={{ mr: 1 }}
-                                    >
-                                        Back
-                                    </Button>
-                                    <Box sx={{ flex: '1 1 auto' }} />
-                                    <Button onClick={handleNext}>
-                                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                                    </Button>
-                                </Box>
-                            </React.Fragment>
-                        )}
+                        <Typography
+                            component="h1"
+                            variant="h4"
+                            sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', padding: "0px 0 0 20px", textAlign: 'start' }}
+                        >
+                            Driver Sign Up
+                        </Typography>
+                        <Box component="form"
+                            // onSubmit={handleSubmit}
+                            noValidate
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                width: '100%',
+                                gap: 2,
+                                padding: '40px 20px'
+                            }} >
+                            <FormControl>
+                                <FormLabel className="sign-label" htmlFor="firstName">First Name</FormLabel>
+                                <TextField
+                                    className="input-item"
+                                    error={firstNameError}
+                                    helperText={firstNameErrorMessage}
+                                    id="firstName"
+                                    type="firstName"
+                                    name="firstName"
+                                    placeholder="Name"
+                                    autoComplete="firstName"
+                                    autoFocus
+                                    required
+                                    fullWidth
+                                    variant="outlined"
+                                    color={firstNameError ? 'error' : 'primary'}
+                                    sx={{ ariaLabel: 'firstName' }}
+                                />
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel className="sign-label" htmlFor="lastName">Driver License</FormLabel>
+                                <TextField
+                                    className="input-item"
+                                    error={lastNameError}
+                                    helperText={lastNameErrorMessage}
+                                    id="driverLicense"
+                                    type="driverLicense"
+                                    name="driverLicense"
+                                    placeholder="Driver License"
+                                    autoComplete="driverLicense"
+                                    autoFocus
+                                    required
+                                    fullWidth
+                                    variant="outlined"
+                                    color={lastNameError ? 'error' : 'primary'}
+                                    sx={{ ariaLabel: 'lastName' }}
+                                />
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel className="sign-label" htmlFor="email">Email</FormLabel>
+                                <TextField
+                                    className="input-item"
+                                    error={emailError}
+                                    helperText={emailErrorMessage}
+                                    id="email"
+                                    type="email"
+                                    name="email"
+                                    placeholder="your@email.com"
+                                    autoComplete="email"
+                                    autoFocus
+                                    required
+                                    fullWidth
+                                    variant="outlined"
+                                    color={emailError ? 'error' : 'primary'}
+                                    sx={{ ariaLabel: 'email' }}
+                                />
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel className="sign-label" htmlFor="phoneNumber">Phone Number</FormLabel>
+                                <TextField
+                                    className="input-item"
+                                    error={phoneNumberError}
+                                    helperText={phoneNumberErrorMessage}
+                                    id="phoneNumber"
+                                    type="phoneNumber"
+                                    name="phoneNumber"
+                                    placeholder="+94123456789"
+                                    autoComplete="phoneNumber"
+                                    autoFocus
+                                    required
+                                    fullWidth
+                                    variant="outlined"
+                                    color={phoneNumberError ? 'error' : 'primary'}
+                                    sx={{ ariaLabel: 'phonenumber' }}
+                                />
+                            </FormControl>
+                            <FormControl>
+                                <GeocodingAutocomplete results={(data) => setLocationData(data)} />
+                                {locationError && <p className="location-error" id="email-helper-text">Please select location.</p>}
+                            </FormControl>
+                            <Button
+                                type="button"
+                                variant="contained"
+                                onClick={validateInputs}
+                            >
+                                {isLoading ? <CircularProgress /> : 'Sign in'}
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="outlined"
+                                onClick={onBackClick}
+                            >
+                                Back
+                            </Button>
+                        </Box>
                     </Card>
                 </CardContent>
             </Box>

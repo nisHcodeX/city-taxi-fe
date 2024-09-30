@@ -23,7 +23,6 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 export default function CustomerRegister() {
     const navigate = useNavigate();
     const [triggerRegister, { isLoading }] = useRegisterMutation();
-    const [triggerGetCustomer] = useLazyGetCustomerQuery();
 
     const [firstNameError, setFirstNameError] = React.useState(false);
     const [firstNameErrorMessage, setFirstNameErrorMessage] = React.useState('');
@@ -34,11 +33,6 @@ export default function CustomerRegister() {
     const [phoneNumberError, setPhoneNumberError] = React.useState(false);
     const [phoneNumberErrorMessage, setPhoneNumberErrorMessage] = React.useState('');
     const [message, setMessage] = React.useState<{message: string, type: AlertColor}| null>(null);
-    // useEffect(() => {
-    //     (async () => {
-    //         const { data, isLoading, isError } = await triggerGetCustomer(4);
-    //     })()
-    // }, []);
 
     const onBackClick = () => {
         navigate('/login');
@@ -139,7 +133,7 @@ export default function CustomerRegister() {
                                     fullWidth
                                     variant="outlined"
                                     color={firstNameError ? 'error' : 'primary'}
-                                    sx={{ ariaLabel: 'email' }}
+                                    sx={{ ariaLabel: 'firstName' }}
                                 />
                             </FormControl>
                             <FormControl>
@@ -158,7 +152,7 @@ export default function CustomerRegister() {
                                     fullWidth
                                     variant="outlined"
                                     color={lastNameError ? 'error' : 'primary'}
-                                    sx={{ ariaLabel: 'email' }}
+                                    sx={{ ariaLabel: 'lastName' }}
                                 />
                             </FormControl>
                             <FormControl>
