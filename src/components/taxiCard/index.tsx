@@ -5,9 +5,10 @@ import './index.scss'
 import { yellow } from "@mui/material/colors";
 
 interface TaxiCardProps {
-    vehicleType: VehicleType
+    vehicleType: VehicleType,
+    showButton?: boolean
 }
-export default function TaxiCard({ vehicleType }: TaxiCardProps) {
+export default function TaxiCard({ vehicleType, showButton }: TaxiCardProps) {
 
     const onRideBook = () => {
         console.log('booked');
@@ -22,12 +23,12 @@ export default function TaxiCard({ vehicleType }: TaxiCardProps) {
                     </div>
                     <div className="taxt-card-content">
                         <div className="title">BMW X5 Chicago 2008</div>
-                        <div className="detail">Per km : 250Rs</div>
+                        <div className="detail">Per km : {vehicleType == VehicleType.CAR ? 'Rs: 250.00': 'Rs: 150.00'}</div>
                         <div className="detail">Passenger Count : {vehicleType == VehicleType.CAR ? 4: 1}</div>
                         <div className="detail">Vehicle Number: sdsdsadcdfef</div>
                         <div className="detail">initial charge : 500Rs</div>
                         <div className="button">
-                            <Button
+                            {showButton ? <></>: <Button
                                 sx={{ marginTop: '8px', }}
                                 color="success"
                                 type="button"
@@ -36,7 +37,7 @@ export default function TaxiCard({ vehicleType }: TaxiCardProps) {
                                 onClick={onRideBook}
                             >
                                 Book A Ride
-                            </Button>
+                            </Button>}
                         </div>
                     </div>
                 </div>

@@ -1,0 +1,21 @@
+.add-driver-container{
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+}
+.title-dash{
+    margin-top: 80px;
+}
+.driver-body{
+    background-color: rgb(241 241 82 / 24%);;
+    border-radius: 8px;
+    width: 100%;
+    height: 100%;
+    margin-top: 20px;
+}
+.vehicle-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
