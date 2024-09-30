@@ -14,7 +14,7 @@ interface TaxiCardProps {
 export default function UserRideCrd({ vehicleType, showButton, oReviewRide, onPayRide }: TaxiCardProps) {
 
     return (
-        <CardContent sx={{ padding: '20px', maxWidth: '800px', width: '100%' }}>
+        <CardContent sx={{ padding: '20px', maxWidth: '800px', width: '100%', }}>
             <Card variant='outlined' className='login-card'>
                 <div className="taxt-card-wrapper">
                     <div className="taxt-card-img">

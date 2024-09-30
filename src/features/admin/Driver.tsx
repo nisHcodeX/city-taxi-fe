@@ -14,6 +14,7 @@ import styled from '@emotion/styled';
 import { TCreateDriver } from '../../types/driver';
 import GeocodingAutocomplete from '../../components/locationSearch';
 import TaxiAlert from '../../components/Alert';
+import AdminDriverCard from '../../components/adminDriverCard';
 
 export default function DriverPage() {
   const { t, i18n } = useTranslation();
@@ -226,8 +227,8 @@ export default function DriverPage() {
         </div>
         <div className="driver-body">
           <div className='vehicle-container'>
-            <DriverCard vehicleType={1} />
-            <DriverCard vehicleType={2} />
+            <AdminDriverCard vehicleType={1} />
+            <AdminDriverCard />
           </div>
         </div>
       </div>

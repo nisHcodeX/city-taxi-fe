@@ -1,32 +1,32 @@
-.taxt-card-wrapper{
+.customer-card-content {
     display: flex;
-    flex-direction: row;
-    flex-grow: 1;
-    height: 520px;
+    flex-direction: column;
+    gap: 16px;
+    width: 80%;
+    padding: 30px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    background-color: #fff;
+    border-radius: 12px;
 }
-.taxt-card-img{
+
+.vehicle-container {
+    width: 100%;
     display: flex;
-    width: 300px;
-    padding: 20px;
-    img{
-        width: 100%;
-        height: auto;
-    }
-} 
-.taxt-card-content{
-    display: flex;
-    flex-grow: 1;
     flex-direction: column;
     gap: 8px;
-    padding: 20px 20px 20px 0px;
-} 
+
+}
+
 .title{
+    width: 100%;
     font-weight: 600;
     background-color: rgb(241 241 82);
     border-radius: 8px;
     padding: 6px 0;
 }
 .detail{
+    width: 100%;
     background-color: rgb(226, 226, 218);
     border-radius: 8px;
     padding: 6px 0;
