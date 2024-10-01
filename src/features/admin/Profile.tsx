@@ -139,6 +139,7 @@ export default function Profile() {
                                     autoComplete="email"
                                     autoFocus
                                     required
+                                    value={'taxiadmin@gamil.com'}
                                     fullWidth
                                     variant="outlined"
                                     color={emailError ? 'error' : 'primary'}

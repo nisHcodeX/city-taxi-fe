@@ -1,15 +1,15 @@
 import { useTranslation } from 'react-i18next';
 import './index.scss'
-import DriverCard from '../../components/driverCard';
 import { AlertColor, Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormLabel } from '@mui/material';
 import { useEffect, useState } from 'react';
-import Home from '../home/Home';
 import GeocodingAutocomplete from '../../components/locationSearch';
 import TaxiCard from '../../components/taxiCard';
 import { VehicleType } from '../../const';
 import { TLocationData } from '../../types/geoLocation';
 import { useGetDriversQuery } from '../../api/driverApiSlice';
 import TaxiAlert from '../../components/Alert';
+import AddCustomerByOperator from './addcutomer';
+import { TCreateCustomerRes } from '../../types/customer';
 export default function Dashboard() {
   const { t, i18n } = useTranslation();
 
@@ -17,7 +17,7 @@ export default function Dashboard() {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [message, setMessage] = useState<{ message: string, type: AlertColor } | null>(null);
   const [locationData, setLocationData] = useState<TLocationData | undefined>(undefined)
-  const [customerData, setcustomerData] = useState<boolean>(false)
+  const [customerData, setCustomerData] = useState<TCreateCustomerRes | undefined>(undefined)
   const [open, setOpen] = useState<boolean>(false)
   const onBook = () => {
     if (customerData) {
@@ -26,7 +26,6 @@ export default function Dashboard() {
       setMessage({ message: 'Please Add customer first', type: 'error' })
       setOpen(false);
     }
-
   };
   const handleContinue = () => {
     if (customerData) {
@@ -49,12 +48,16 @@ export default function Dashboard() {
         })()
       }
     };
-  }, [locationData])
+  }, [locationData]);
+
+  const customerDataGetter = (data: TCreateCustomerRes) => {
+    setCustomerData(data);
+  }
 
   return (
     <div>
       <h2 className='title-dash'>Operator Dashboard</h2>
-      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', }}>
         <div className="add-driver-container">
           <Button
             variant="contained"
@@ -64,6 +67,10 @@ export default function Dashboard() {
           </Button>
         </div>
         {message && <TaxiAlert text={message.message} severity={message.type} onClose={() => setMessage(null)} />}
+        <Dialog open={openDialog} >
+          <DialogTitle>Operator Add Customer</DialogTitle>
+          <AddCustomerByOperator customerData={customerDataGetter} setOpenDialog={setOpenDialog} />
+        </Dialog>
         <Dialog open={open} >
           <DialogTitle>Book A Ride</DialogTitle>
           <DialogContentText sx={{ padding: '0 20px' }}>

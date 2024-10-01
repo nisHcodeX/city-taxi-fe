@@ -34,4 +34,4 @@ export const driverApiSlice = createApi({
   }),
 });
 
-export const { useRegisterMutation, useGetDriverQuery, useGetDriversQuery, useGetNearByQuery } = driverApiSlice
+export const { useRegisterMutation, useGetDriverQuery, useGetDriversQuery, useLazyGetNearByQuery } = driverApiSlice

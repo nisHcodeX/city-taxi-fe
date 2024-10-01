@@ -136,6 +136,7 @@ export default function Profile() {
                                     type="email"
                                     name="email"
                                     placeholder="your@email.com"
+                                    value={'nishedha.srilak@gamil.com'}
                                     autoComplete="email"
                                     autoFocus
                                     required

@@ -5,6 +5,7 @@ import TaxiDialog from '../../components/Dialog/TaxtDialog';
 import React, { useState } from 'react';
 import { useAddVehicleMutation } from '../../api/vehicleApiSlice';
 import DriverCard from '../../components/driverCard';
+import UserRideCrd from '../../components/userRideCard';
 
 
 export default function DriverPage() {
@@ -198,8 +199,8 @@ export default function DriverPage() {
         </div> */}
         <div className="driver-body">
           <div className='vehicle-container'>
-            <DriverCard vehicleType={1}  />
-            <DriverCard vehicleType={2}  />
+          <UserRideCrd vehicleType={1} />
+          <UserRideCrd vehicleType={2} />
           </div>
         </div>
       </div>

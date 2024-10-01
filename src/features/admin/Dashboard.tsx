@@ -7,7 +7,7 @@ import { PieChart } from '@mui/x-charts/PieChart';
 
 export default function Dashboard() {
   const { t, i18n } = useTranslation();
-  const [message, setMessage] = useState<{ message: string, type: AlertColor } | null>(null);
+  const [message, setMessage] = useState<{ message: string, type: AlertColor } | null>({message: 'successfully update meter price', type:"success"});
 
   const onUpdateClick = () => {
     setMessage({message: 'successfully update meter price', type:"success"})

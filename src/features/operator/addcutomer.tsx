@@ -1,83 +1,108 @@
-import { useTranslation } from 'react-i18next';
-import './index.scss';
-import UserRideCrd from '../../components/userRideCard';
-import { AlertColor, Box, Button, Card, CardContent, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormLabel, TextField } from '@mui/material';
-import TaxiAlert from '../../components/Alert';
-import { useState } from 'react';
+import styled from "@emotion/styled";
+import { AlertColor, Box, Button, Card, CardContent, CircularProgress, FormControl, FormLabel, Stack, TextField, Typography } from "@mui/material";
+import LogoContainer from "../../components/logoContainer";
+import { useNavigate } from "react-router";
+import { useLazyGetCustomerQuery, useRegisterMutation } from "../../api/customerApiSlice";
+import React, { useEffect } from "react";
+import { TCreateCustomer, TCreateCustomerRes } from "../../types/customer";
+import TaxiAlert from "../../components/Alert";
 
-export default function Profile() {
-  const { t, i18n } = useTranslation();
-  const [open, setOpen] = useState<boolean>(false);
-  const [message, setMessage] = useState<{ message: string, type: AlertColor } | null>(null);
+const SignInContainer = styled(Stack)(({ theme }) => ({
+    '&::before': {
+        content: '""',
+        display: 'block',
+        position: 'absolute',
+        zIndex: -1,
+        inset: 0,
+        backgroundImage:
+            'radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))',
+        backgroundRepeat: 'no-repeat',
+    },
+}));
+interface AddCustomerByOperatorProps{
+  customerData: any,
+  setOpenDialog: any,
+}
 
-  const [firstNameError, setFirstNameError] = useState(false);
-  const [firstNameErrorMessage, setFirstNameErrorMessage] = useState('');
-  const [lastNameError, setLastNameError] = useState(false);
-  const [lastNameErrorMessage, setLastNameErrorMessage] = useState('');
-  const [emailError, setEmailError] = useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = useState('');
-  const [phoneNumberError, setPhoneNumberError] = useState(false);
-  const [phoneNumberErrorMessage, setPhoneNumberErrorMessage] = useState('');
 
-  const handleRegister = async (data: any) => {
-    setMessage(null);
-  };
+export default function AddCustomerByOperator({customerData, setOpenDialog} : AddCustomerByOperatorProps) {
+    const [triggerRegister, { isLoading }] = useRegisterMutation();
 
-  const validateInputs = () => {
+    const [firstNameError, setFirstNameError] = React.useState(false);
+    const [firstNameErrorMessage, setFirstNameErrorMessage] = React.useState('');
+    const [lastNameError, setLastNameError] = React.useState(false);
+    const [lastNameErrorMessage, setLastNameErrorMessage] = React.useState('');
+    const [emailError, setEmailError] = React.useState(false);
+    const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
+    const [phoneNumberError, setPhoneNumberError] = React.useState(false);
+    const [phoneNumberErrorMessage, setPhoneNumberErrorMessage] = React.useState('');
+    const [message, setMessage] = React.useState<{message: string, type: AlertColor}| null>(null);
 
-    const firstName = document.getElementById('firstName') as HTMLInputElement;
-    const lastName = document.getElementById('lastName') as HTMLInputElement;
-    const email = document.getElementById('email') as HTMLInputElement;
-    const phoneNumber = document.getElementById('phoneNumber') as HTMLInputElement;
-    
-    let isValid = true;
 
-    if (!firstName.value) {
-      setFirstNameError(true);
-      setFirstNameErrorMessage('Please enter first name');
-      isValid = false;
-    } else {
-      setFirstNameError(false);
-      setFirstNameErrorMessage('');
+    const registeredData = (data : TCreateCustomerRes) => {
+      customerData(data)
+      setMessage({message: 'Successfuly registered customer', type: 'success'})
+      setOpenDialog(false);
     }
-    if (!lastName.value) {
-      setLastNameError(true);
-      setLastNameErrorMessage('Please enter last name');
-      isValid = false;
-    } else {
-      setLastNameError(false);
-      setLastNameErrorMessage('');
-    }
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-      setEmailError(true);
-      setEmailErrorMessage('Please enter a valid email address.');
-      isValid = false;
-    } else {
-      setEmailError(false);
-      setEmailErrorMessage('');
-    }
-    if (!phoneNumber.value || !/^\+94\d{9}$/.test(phoneNumber.value)) {
-      setPhoneNumberErrorMessage('Please enter a valid phone number.');
-      isValid = false;
-    } else {
-      setPhoneNumberError(false);
-      setPhoneNumberErrorMessage('');
-    }
+    const handleRegister = async (data: TCreateCustomer) => {
+        setMessage(null);
+        triggerRegister(data)
+            .unwrap()
+            .then(res => registeredData(res))
+            .catch(err => setMessage({message: err?.data?.message, type: 'error'}));
+    };
 
-    if (isValid) handleRegister({ name: firstName.value, email: email.value, phoneNumber: phoneNumber.value });
-  };
+    const validateInputs = () => {
 
-  return (
-    <div className='user-view'>
-      {message && <TaxiAlert text={message.message} severity={message.type} onClose={() => setMessage(null)} />}
-      <h2 className='title-dash'>Operator Profile</h2>
-      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-      <div className="ride-body">
-      <Box sx={{ width: '100%', typography: 'body1', marginTop: '50px' }} className="login-wrapper"
+        const firstName = document.getElementById('firstName') as HTMLInputElement;
+        const lastName = document.getElementById('lastName') as HTMLInputElement;
+        const email = document.getElementById('email') as HTMLInputElement;
+        const phoneNumber = document.getElementById('phoneNumber') as HTMLInputElement;
+
+        let isValid = true;
+
+        if (!firstName.value) {
+            setFirstNameError(true);
+            setFirstNameErrorMessage('Please enter first name');
+            isValid = false;
+        } else {
+            setFirstNameError(false);
+            setFirstNameErrorMessage('');
+        }
+        if (!lastName.value) {
+            setLastNameError(true);
+            setLastNameErrorMessage('Please enter last name');
+            isValid = false;
+        } else {
+            setLastNameError(false);
+            setLastNameErrorMessage('');
+        }
+        if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
+            setEmailError(true);
+            setEmailErrorMessage('Please enter a valid email address.');
+            isValid = false;
+        } else {
+            setEmailError(false);
+            setEmailErrorMessage('');
+        }
+        if (!phoneNumber.value || !/^\+94\d{9}$/.test(phoneNumber.value)) {
+            setPhoneNumberErrorMessage('Please enter a valid phone number.');
+            isValid = false;
+        } else {
+            setPhoneNumberError(false);
+            setPhoneNumberErrorMessage('');
+        }
+
+        if (isValid) handleRegister({ name: firstName.value, email: email.value, phoneNumber: phoneNumber.value });
+    };
+
+    return (
+        <SignInContainer>
+            {message && <TaxiAlert text={message.message} severity={message.type} onClose={()=>setMessage(null)}/>}
+            <Box sx={{ width: '100%', typography: 'body1', marginTop: '0px' }} className="login-wrapper"
             >
-                <CardContent sx={{ width: '600px' }}>
-                    <Card variant='outlined' className="login-card">
-
+                <CardContent sx={{ width: '600px', }}>
+                    <Card variant='outlined' >
                         <Box component="form"
                             // onSubmit={handleSubmit}
                             noValidate
@@ -136,7 +161,6 @@ export default function Profile() {
                                     type="email"
                                     name="email"
                                     placeholder="your@email.com"
-                                    value={'operator@gamil.com'}
                                     autoComplete="email"
                                     autoFocus
                                     required
@@ -144,7 +168,6 @@ export default function Profile() {
                                     variant="outlined"
                                     color={emailError ? 'error' : 'primary'}
                                     sx={{ ariaLabel: 'email' }}
-                                    disabled
                                 />
                             </FormControl>
                             <FormControl>
@@ -171,14 +194,19 @@ export default function Profile() {
                                 variant="contained"
                                 onClick={validateInputs}
                             >
-                                {false ? <CircularProgress /> : 'Update'}
+                                {isLoading ? <CircularProgress /> : 'Create Customer'}
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="outlined"
+                                onClick={()=> setOpenDialog(false)}
+                            >
+                                Cancel
                             </Button>
                         </Box>
                     </Card>
                 </CardContent>
             </Box>
-      </div>
-      </div>
-    </div>
-  );
+        </SignInContainer>
+    )
 }

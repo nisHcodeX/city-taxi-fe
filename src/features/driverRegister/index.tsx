@@ -103,7 +103,7 @@ export default function DriverSignInPage() {
             setLocationError(false);
         }
 
-        if (isValid && locationData?.address) handleRegister({ name: firstName.value, email: email.value, phoneNumber: phoneNumber.value, driverLicense: driverLicense.value, latitude: locationData.lat , longitude: locationData.lng });
+        if (isValid && locationData?.address) handleRegister({ name: firstName.value, email: email.value, phoneNumber: phoneNumber.value, driverLicense: driverLicense.value, latitude: locationData.lat , longitude: locationData.lng, locationName: locationData.address });
     };
 
 

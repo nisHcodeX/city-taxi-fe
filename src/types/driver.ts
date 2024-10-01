@@ -6,6 +6,7 @@ type TCreateDriver = {
     driverLicense: string;
     latitude: number;
     longitude: number;
+    locationName: string
 };
 
 type TCreateDriverRes = {

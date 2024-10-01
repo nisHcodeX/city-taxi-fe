@@ -8,7 +8,7 @@ import DriverCard from '../../components/driverCard';
 import { useRegisterMutation } from '../../api/customerApiSlice';
 import { useNavigate } from 'react-router';
 import OperatorCard from '../../components/adminOperatorCard';
-
+import TaxiAlert from '../../components/Alert';
 const operatorData = [
   {
     "id": 10,
@@ -32,7 +32,6 @@ export default function OperatorPage() {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const navigate = useNavigate();
   const [triggerRegister, { isLoading }] = useRegisterMutation();
-
   const [firstNameError, setFirstNameError] = React.useState(false);
   const [firstNameErrorMessage, setFirstNameErrorMessage] = React.useState('');
   const [lastNameError, setLastNameError] = React.useState(false);
@@ -41,7 +40,7 @@ export default function OperatorPage() {
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [phoneNumberError, setPhoneNumberError] = React.useState(false);
   const [phoneNumberErrorMessage, setPhoneNumberErrorMessage] = React.useState('');
-  const [message, setMessage] = React.useState<{message: string, type: AlertColor}| null>(null);
+  const [message, setMessage] = React.useState<{message: string, type: AlertColor}| null>({message: 'successfully Added operator', type:"success"});
 
   const onBackClick = () => {
       navigate('/login');
@@ -253,6 +252,7 @@ export default function OperatorPage() {
   return (
     <div>
       <h2 className='title-dash'>Operators List</h2>
+      {message && <TaxiAlert text={message.message} severity={message.type} onClose={() => setMessage(null)} />}
       <TaxiDialog open={openDialog} handleClose={() => setOpenDialog(false)} title={'add Operator to system'} infoText={"You can add Operator in here"} children={addVehicle()} handleContinue={() => validateInputs()} />
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
         <div className="add-driver-container">

@@ -21,7 +21,7 @@ export default function Dashboard() {
   }
 
   const onPayRide = () => {
-    setOpenPay(true)
+    setOpenPay(true);
   }
 
   const oReviewRide = () => {

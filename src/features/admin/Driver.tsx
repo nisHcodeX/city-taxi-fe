@@ -31,7 +31,7 @@ export default function DriverPage() {
   const [phoneNumberError, setPhoneNumberError] = React.useState(false);
   const [phoneNumberErrorMessage, setPhoneNumberErrorMessage] = React.useState('');
   const [locationError, setLocationError] = React.useState(false);
-  const [message, setMessage] = React.useState<{ message: string, type: AlertColor } | null>(null);
+  const [message, setMessage] = React.useState<{ message: string, type: AlertColor } | null>({ message: 'Successfuly registered a Driver to System', type: 'success' });
   const [locationData, setLocationData] = React.useState<TLocationData | undefined>(undefined)
 
 
@@ -93,11 +93,12 @@ export default function DriverPage() {
       setLocationError(false);
     }
 
-    if (isValid && locationData?.address) handleRegister({ name: firstName.value, email: email.value, phoneNumber: phoneNumber.value, driverLicense: driverLicense.value, latitude: locationData.lat, longitude: locationData.lng });
+    if (isValid && locationData?.address) handleRegister({ name: firstName.value, email: email.value, phoneNumber: phoneNumber.value, driverLicense: driverLicense.value, latitude: locationData.lat, longitude: locationData.lng, locationName: locationData.address });
   };
 
   const addDriver = () => {
     return <>
+
       <Box sx={{ width: '100%', typography: 'body1', marginTop: "0px" }} className={'login-wrapper'}>
         <CardContent sx={{ width: '800px' }}>
           <Card variant='outlined'>
@@ -215,6 +216,7 @@ export default function DriverPage() {
   return (
     <div>
       <h2 className='title-dash'>Drivers List</h2>
+      {message && <TaxiAlert text={message.message} severity={message.type} onClose={() => setMessage(null)} />}
       <TaxiDialog open={openDialog} handleClose={() => setOpenDialog(false)} title={'add Driver to system'} infoText={"You can add Driver in here"} children={addDriver()} handleContinue={() => validateInputs()} />
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
         <div className="add-driver-container">

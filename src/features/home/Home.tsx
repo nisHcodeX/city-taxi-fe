@@ -2,8 +2,7 @@ import { AlertColor, Box, Button, CircularProgress, Dialog, DialogActions, Dialo
 import LogoContainer from '../../components/logoContainer';
 import './index.scss';
 import {
-  MenuOutlined,
-  Search,
+  MenuOutlined
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router';
 import TaxiCard from '../../components/taxiCard';
@@ -11,18 +10,28 @@ import { VehicleType } from '../../const';
 import GeocodingAutocomplete from '../../components/locationSearch';
 import { useEffect, useState } from 'react';
 import { TLocationData } from '../../types/geoLocation';
-import { useGetDriversQuery, useGetNearByQuery } from '../../api/driverApiSlice';
-import { FALSE } from 'sass';
+import { useGetDriversQuery, useLazyGetNearByQuery } from '../../api/driverApiSlice';
 import TaxiAlert from '../../components/Alert';
 
 
 export default function Home() {
   const navigate = useNavigate();
-  const { data, error, isLoading } = useGetDriversQuery();
-  // const [trigerNearbyDriver] = useGetNearByQuery();
-  const [message, setMessage] = useState<{message: string, type: AlertColor}| null>(null);
+  const { data: driverData, error, isLoading: driverDataLoading } = useGetDriversQuery();
+  const [triggerNearbyDriver, { data, isLoading, isError }] = useLazyGetNearByQuery();
+  const [message, setMessage] = useState<{ message: string, type: AlertColor } | null>(null);
   const [locationData, setLocationData] = useState<TLocationData | undefined>(undefined)
-  const [open, setOpen] = useState<boolean>(false)
+  const [open, setOpen] = useState<boolean>(false);
+  const storedAccount = localStorage.getItem('account');
+  const accData = storedAccount ? JSON.parse(storedAccount) : null;
+
+  useEffect(() => {
+    if (!accData) {
+      navigate('/login');
+    } else if (accData.accountType != 'CUSTOMER') {
+      localStorage.removeItem('account');
+      navigate('/login');
+    }
+  }, [])
 
   const onUserClick = () => {
     navigate('/user/dashboard');
@@ -31,8 +40,7 @@ export default function Home() {
     setOpen(true);
   };
   const handleContinue = () => {
-    console.log('hi')
-    setMessage({message: 'Succesfully booked a ride', type: 'success'} )
+    setMessage({ message: 'Succesfully booked a ride', type: 'success' })
     setOpen(false);
   };
 
@@ -41,19 +49,15 @@ export default function Home() {
   }
 
   useEffect(() => {
-    return () => {
-      if (locationData?.lat && locationData.lng) {
-        (async () => {
-          // const { data, isLoading, isError } = await trigerNearbyDriver({ radius: 3, lat: locationData.lat, lng: locationData.lng });
-        })()
-      }
-    };
-  }, [locationData])
+    if (locationData?.lat && locationData.lng) {
+      triggerNearbyDriver({ radius: 3, lat: locationData.lat, lng: locationData.lng });
+    }
+  }, [locationData, triggerNearbyDriver]);
 
 
   return (
     <div>
-      {message && <TaxiAlert text={message.message} severity={message.type} onClose={()=>setMessage(null)}/>}
+      {message && <TaxiAlert text={message.message} severity={message.type} onClose={() => setMessage(null)} />}
       <Dialog open={open} >
         <DialogTitle>Book A Ride</DialogTitle>
         <DialogContentText sx={{ padding: '0 20px' }}>
@@ -95,9 +99,8 @@ export default function Home() {
           </div>
         </div>
         {
-          isLoading ? <CircularProgress /> : 'Add booking'
+          driverDataLoading && <CircularProgress />
         }
-
         <TaxiCard vehicleType={VehicleType.BIKE} onRideBook={() => onBook()} />
         <TaxiCard vehicleType={VehicleType.CAR} onRideBook={() => onBook()} />
         <TaxiCard vehicleType={VehicleType.BIKE} onRideBook={() => onBook()} />

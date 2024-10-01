@@ -94,7 +94,7 @@ export default function Profile() {
           setLocationError(false);
       }
 
-      if (isValid && locationData?.address) handleRegister({ name: firstName.value, email: email.value, phoneNumber: phoneNumber.value, driverLicense: driverLicense.value, latitude: locationData.lat , longitude: locationData.lng });
+      if (isValid && locationData?.address) handleRegister({ name: firstName.value, email: email.value, phoneNumber: phoneNumber.value, driverLicense: driverLicense.value, latitude: locationData.lat , longitude: locationData.lng, locationName : locationData.address });
   };
 
   return (
@@ -169,6 +169,7 @@ export default function Profile() {
                                     autoComplete="email"
                                     autoFocus
                                     required
+                                    value={'shalin@gmail.com'}
                                     fullWidth
                                     variant="outlined"
                                     color={emailError ? 'error' : 'primary'}
