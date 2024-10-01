@@ -2,15 +2,15 @@ import { Button } from '@mui/material'
 import React from 'react'
 import { VehicleType } from '../../const'
 import './index.scss'
+import { OperatorCreateRes } from '../../types/operator'
 
-interface CustomerCardProps {
-    data: any,
-    vehicleType?: VehicleType
-    onUpdateClick?: ()=> void;
-    onDeleteClick?: ()=> void;
+interface OperatorCardProps {
+    data: OperatorCreateRes,
+    onUpdateClick: (id: number)=> void;
+    onDeleteClick: (id: number)=> void;
 }
 
-const OperatorCard = ({data, vehicleType= 1, onUpdateClick, onDeleteClick }: CustomerCardProps) => {
+const OperatorCard = ({data,  onUpdateClick, onDeleteClick }: OperatorCardProps) => {
   return (
     <div className="customer-card-content">
     <div className="title">Name : {data.name}</div>
@@ -23,7 +23,7 @@ const OperatorCard = ({data, vehicleType= 1, onUpdateClick, onDeleteClick }: Cus
             type="button"
             fullWidth
             variant="contained"
-            onClick={onUpdateClick}
+            onClick={()=>onUpdateClick(data.id)}
         >
             Update Details
         </Button>}
@@ -35,7 +35,7 @@ const OperatorCard = ({data, vehicleType= 1, onUpdateClick, onDeleteClick }: Cus
             type="button"
             fullWidth
             variant="outlined"
-            onClick={onDeleteClick}
+            onClick={()=>onDeleteClick(data.id)}
         >
             Delete
         </Button>}

@@ -12,5 +12,12 @@ type OperatorCreateRes = {
     createdAt: string;
     updatedAt: string | null;
 }
+type OperatorUpdateRes = {
+    id: number;
+    name?: string;
+    email?: string;
+    phoneNumber?: string;
 
-export type { OperatorCreate, OperatorCreateRes }
+}
+
+export type { OperatorCreate, OperatorCreateRes, OperatorUpdateRes }

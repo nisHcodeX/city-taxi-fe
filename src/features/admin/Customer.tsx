@@ -45,10 +45,6 @@ export default function CustomerPage() {
   const [message, setMessage] = React.useState<{message: string, type: AlertColor}| null>(null);
   const [openDialog, setOpenDialog] = React.useState<boolean>(false);
 
-  const onBackClick = () => {
-      navigate('/login');
-  };
-
   const handleRegister = async (data: TCreateCustomer) => {
       setMessage(null);
       triggerRegister(data)
