@@ -16,10 +16,9 @@ import TaxiAlert from '../../components/Alert';
 
 export default function Home() {
   const navigate = useNavigate();
-  const { data: driverData, error, isLoading: driverDataLoading } = useGetDriversQuery();
   const [triggerNearbyDriver, { data, isLoading, isError }] = useLazyGetNearByQuery();
   const [message, setMessage] = useState<{ message: string, type: AlertColor } | null>(null);
-  const [locationData, setLocationData] = useState<TLocationData | undefined>(undefined)
+  const [locationData, setLocationData] = useState<TLocationData | undefined>({address: 'galle', lat:6.026143327519091, lng: 80.21649701908821 })
   const [open, setOpen] = useState<boolean>(false);
   const storedAccount = localStorage.getItem('account');
   const accData = storedAccount ? JSON.parse(storedAccount) : null;
@@ -50,11 +49,11 @@ export default function Home() {
 
   useEffect(() => {
     if (locationData?.lat && locationData.lng) {
-      triggerNearbyDriver({ radius: 3, lat: locationData.lat, lng: locationData.lng });
+      triggerNearbyDriver({ radius: 4, lat: locationData.lat, lng: locationData.lng });
     }
   }, [locationData, triggerNearbyDriver]);
 
-
+  console.log('data', data);
   return (
     <div>
       {message && <TaxiAlert text={message.message} severity={message.type} onClose={() => setMessage(null)} />}
@@ -95,11 +94,11 @@ export default function Home() {
           <div className="text-container">
           </div>
           <div className="location">
-            <GeocodingAutocomplete results={locationResults} initialLat={6.032894799999999} initialLng={80.2167912} />
+            <GeocodingAutocomplete results={locationResults} initialLat={locationData?.lat} initialLng={locationData?.lng} />
           </div>
         </div>
         {
-          driverDataLoading && <CircularProgress />
+          isLoading && <CircularProgress />
         }
         <TaxiCard vehicleType={VehicleType.BIKE} onRideBook={() => onBook()} />
         <TaxiCard vehicleType={VehicleType.CAR} onRideBook={() => onBook()} />
