@@ -5,9 +5,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import OutlinedInput from '@mui/material/OutlinedInput';
-
-
+import './index.scss';
 interface DilaogProps {
   open: boolean;
   handleClose: () => void;
@@ -21,6 +19,7 @@ export default function TaxiDialog({ open, handleClose, children, title, infoTex
 
   return (
     <Dialog
+      className='dialog-custom'
       open={open}
       onClose={handleClose}
     >
@@ -29,7 +28,7 @@ export default function TaxiDialog({ open, handleClose, children, title, infoTex
         sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}
       >
         <DialogContentText>
-        {infoText}
+          {infoText}
         </DialogContentText>
         {children}
       </DialogContent>

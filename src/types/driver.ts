@@ -16,13 +16,13 @@ type TCreateDriverRes = {
     phoneNumber: string;
     driverLicense: string;
     username: string;
+
     password: string;
     latitude: number | null;
     longitude: number | null;
     status: 'ACTIVE' | 'INACTIVE';
-    createdAt: string; 
-  };
-
+    createdAt: string;
+};
 
 type TDriverNearBy = {
     radius: number;
@@ -30,8 +30,24 @@ type TDriverNearBy = {
     lng: number;
 };
 
+
+type TDriver = {
+    id: number;
+    name: string;
+    email: string;
+    phoneNumber: string;
+    driverLicense: string;
+    availability: 'BUSY' | 'AVAILABLE';
+    latitude: number;
+    longitude: number;
+    locationName: string;
+    createdAt: string; 
+    updatedAt: string | null; 
+}
+
 export type {
     TCreateDriver,
     TDriverNearBy,
-    TCreateDriverRes
+    TCreateDriverRes,
+    TDriver
 }

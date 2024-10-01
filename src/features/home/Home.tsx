@@ -10,7 +10,7 @@ import { VehicleType } from '../../const';
 import GeocodingAutocomplete from '../../components/locationSearch';
 import { useEffect, useState } from 'react';
 import { TLocationData } from '../../types/geoLocation';
-import { useGetDriversQuery, useLazyGetNearByQuery } from '../../api/driverApiSlice';
+import {  useLazyGetNearByQuery } from '../../api/driverApiSlice';
 import TaxiAlert from '../../components/Alert';
 
 

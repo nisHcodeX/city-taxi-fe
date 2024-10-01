@@ -26,11 +26,6 @@ export default function OperatorPage() {
     const [message, setMessage] = React.useState<{ message: string, type: AlertColor } | null>(null);
     const [updateOperator, setUpdateOperator] = React.useState<OperatorCreateRes | undefined>(undefined);
 
-    const firstNameRef = useRef<HTMLInputElement>(null);
-    const lastNameRef = useRef<HTMLInputElement>(null);
-    const emailRef = useRef<HTMLInputElement>(null);
-    const phoneNumberRef = useRef<HTMLInputElement>(null);
-
     useEffect(() => {
         trigerGetOperators()
     }, []);
@@ -137,7 +132,6 @@ export default function OperatorPage() {
                             <FormControl>
                                 <FormLabel className="sign-label" htmlFor="firstName">First Name</FormLabel>
                                 <TextField
-                                    ref={firstNameRef}
                                     className="input-item"
                                     error={firstNameError}
                                     helperText={firstNameErrorMessage}
@@ -158,7 +152,6 @@ export default function OperatorPage() {
                             <FormControl>
                                 <FormLabel className="sign-label" htmlFor="lastName">Last Name</FormLabel>
                                 <TextField
-                                    ref={lastNameRef}
                                     className="input-item"
                                     error={lastNameError}
                                     helperText={lastNameErrorMessage}
@@ -179,7 +172,7 @@ export default function OperatorPage() {
                             <FormControl>
                                 <FormLabel className="sign-label" htmlFor="email">Email</FormLabel>
                                 <TextField
-                                    ref={emailRef}
+
                                     className="input-item"
                                     error={emailError}
                                     helperText={emailErrorMessage}
@@ -200,7 +193,6 @@ export default function OperatorPage() {
                             <FormControl>
                                 <FormLabel className="sign-label" htmlFor="phoneNumber">Phone Number</FormLabel>
                                 <TextField
-                                    ref={phoneNumberRef}
                                     className="input-item"
                                     error={phoneNumberError}
                                     helperText={phoneNumberErrorMessage}

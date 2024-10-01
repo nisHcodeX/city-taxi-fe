@@ -14,24 +14,31 @@ export const driverApiSlice = createApi({
       }),
     }),
     getNearBy: builder.query<any, TDriverNearBy>({
-      query: ({radius, lat, lng}) => ({
+      query: ({ radius, lat, lng }) => ({
         url: 'driver/nearby',
         params: { radius, lat, lng }
       }),
     }),
     getDriver: builder.query<any, number>({
-        query: (id) => ({
-            url : `/driver`,
-            params: { id }
-        }),
+      query: (id) => ({
+        url: `/driver`,
+        params: { id }
+      }),
     }),
     getDrivers: builder.query<any, void>({
-        query: (id) => ({
-            url : `/driver`,
-            method: 'GET'
-        }),
+      query: () => ({
+        url: `/driver`,
+        method: 'GET'
+      }),
+    }),
+    deleteDriver: builder.query<any, number>({
+      query: (ids) => ({
+        url: `/driver`,
+        method: 'DELETE',
+        params: { ids }
+      }),
     }),
   }),
 });
 
-export const { useRegisterMutation, useGetDriverQuery, useGetDriversQuery, useLazyGetNearByQuery } = driverApiSlice
+export const { useRegisterMutation, useGetDriverQuery, useGetDriversQuery, useLazyGetDriversQuery, useLazyGetNearByQuery, useLazyDeleteDriverQuery } = driverApiSlice

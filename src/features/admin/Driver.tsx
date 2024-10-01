@@ -2,16 +2,16 @@ import { AlertColor, Box, Button, Card, CardContent, CircularProgress, FormContr
 import { useTranslation } from 'react-i18next';
 import './index.scss'
 import TaxiDialog from '../../components/Dialog/TaxtDialog';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAddVehicleMutation } from '../../api/vehicleApiSlice';
 import DriverCard from '../../components/driverCard';
-import { useRegisterMutation } from '../../api/customerApiSlice';
+import { useLazyDeleteDriverQuery, useLazyGetDriversQuery, useRegisterMutation } from '../../api/driverApiSlice';
 import { useNavigate } from 'react-router';
 import { TLocationData } from '../../types/geoLocation';
 import Typography from '@mui/material/Typography';
 import LogoContainer from '../../components/logoContainer';
 import styled from '@emotion/styled';
-import { TCreateDriver } from '../../types/driver';
+import { TCreateDriver, TCreateDriverRes, TDriver } from '../../types/driver';
 import GeocodingAutocomplete from '../../components/locationSearch';
 import TaxiAlert from '../../components/Alert';
 import AdminDriverCard from '../../components/adminDriverCard';
@@ -19,9 +19,9 @@ import AdminDriverCard from '../../components/adminDriverCard';
 export default function DriverPage() {
   const { t, i18n } = useTranslation();
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const navigate = useNavigate();
   const [triggerRegister, { isLoading }] = useRegisterMutation();
-
+  const [triggerGetDrivers, { isLoading: isDriversLoading, data: driversList }] = useLazyGetDriversQuery();
+  const [triggerDeleteDriver] = useLazyDeleteDriverQuery();
   const [firstNameError, setFirstNameError] = React.useState(false);
   const [firstNameErrorMessage, setFirstNameErrorMessage] = React.useState('');
   const [lastNameError, setLastNameError] = React.useState(false);
@@ -31,19 +31,43 @@ export default function DriverPage() {
   const [phoneNumberError, setPhoneNumberError] = React.useState(false);
   const [phoneNumberErrorMessage, setPhoneNumberErrorMessage] = React.useState('');
   const [locationError, setLocationError] = React.useState(false);
-  const [message, setMessage] = React.useState<{ message: string, type: AlertColor } | null>({ message: 'Successfuly registered a Driver to System', type: 'success' });
+  const [message, setMessage] = React.useState<{ message: string, type: AlertColor } | null>(null);
   const [locationData, setLocationData] = React.useState<TLocationData | undefined>(undefined)
+  const [updatedDriver, setupdatedDriver] = React.useState<TCreateDriverRes | undefined>(undefined);
 
+  useEffect(() => {
+    triggerGetDrivers();
+  }, []);
 
-  const addVehicleToSystem = () => {
+  const onDeleteClick = async (id: number) => {
+    const results = await triggerDeleteDriver(id);
+    if (results.isSuccess) {
+      setMessage({ message: 'Succesfully deleted Driver', type: 'info' });
+      triggerGetDrivers();
+    }
+  };
+  const onUpdateClick = (id: number) => {
+    setOpenDialog(true);
+    const driver = driversList.find((driver: TDriver)=> driver.id == id);
+    if(driver){
+      setupdatedDriver(driver)
+    }
+  };
 
-  }
   const handleRegister = async (data: TCreateDriver) => {
     setMessage(null);
-    triggerRegister(data)
-      .unwrap()
-      .then(res => { setMessage({ message: 'Successfuly registered to System', type: 'success' }) })
-      .catch(err => setMessage({ message: err?.data?.message, type: 'error' }));
+    if (updatedDriver) {
+      triggerRegister(data)
+        .unwrap()
+        .then(res => { setMessage({ message: 'Successfuly driver updated', type: 'info' }) })
+        .catch(err => setMessage({ message: err?.data?.message, type: 'error' }));
+    } else {
+      triggerRegister(data)
+        .unwrap()
+        .then(res => { setMessage({ message: 'Successfuly driver registered to System', type: 'success' }), triggerGetDrivers() })
+        .catch(err => setMessage({ message: err?.data?.message, type: 'error' }));
+    }
+    setOpenDialog(false);
   };
 
   const validateInputs = () => {
@@ -129,6 +153,7 @@ export default function DriverPage() {
                   variant="outlined"
                   color={firstNameError ? 'error' : 'primary'}
                   sx={{ ariaLabel: 'firstName' }}
+                  defaultValue={updatedDriver?.name || ''}
                 />
               </FormControl>
               <FormControl>
@@ -148,6 +173,7 @@ export default function DriverPage() {
                   variant="outlined"
                   color={lastNameError ? 'error' : 'primary'}
                   sx={{ ariaLabel: 'lastName' }}
+                  defaultValue={updatedDriver?.driverLicense || ''}
                 />
               </FormControl>
               <FormControl>
@@ -167,6 +193,7 @@ export default function DriverPage() {
                   variant="outlined"
                   color={emailError ? 'error' : 'primary'}
                   sx={{ ariaLabel: 'email' }}
+                  defaultValue={updatedDriver?.email || ''}
                 />
               </FormControl>
               <FormControl>
@@ -186,10 +213,11 @@ export default function DriverPage() {
                   variant="outlined"
                   color={phoneNumberError ? 'error' : 'primary'}
                   sx={{ ariaLabel: 'phonenumber' }}
+                  defaultValue={updatedDriver?.phoneNumber || ''}
                 />
               </FormControl>
               <FormControl>
-                <GeocodingAutocomplete results={(data) => setLocationData(data)} />
+                <GeocodingAutocomplete results={(data) => setLocationData(data)} initialLat={updatedDriver?.latitude || undefined} initialLng={updatedDriver?.longitude || undefined} />
                 {locationError && <p className="location-error" id="email-helper-text">Please select location.</p>}
               </FormControl>
               {/* <Button
@@ -229,8 +257,8 @@ export default function DriverPage() {
         </div>
         <div className="driver-body">
           <div className='vehicle-container'>
-            <AdminDriverCard vehicleType={1} />
-            <AdminDriverCard />
+            {isDriversLoading && <CircularProgress />}
+            {driversList?.map((driver: TDriver, index: number) => <AdminDriverCard key={index} data={driver} onDeleteClick={onDeleteClick} onUpdateClick={onUpdateClick} />)}
           </div>
         </div>
       </div>
