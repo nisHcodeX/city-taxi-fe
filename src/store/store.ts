@@ -5,6 +5,7 @@ import { customerApiSlice } from '../api/customerApiSlice';
 import { loginApiSlice } from '../api/loginApiSlice';
 import { driverApiSlice } from '../api/driverApiSlice';
 import { operatorApiSlice } from '../api/operatorApiSlice';
+import { priceApiSlice } from '../api/priceApiSlice';
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     [loginApiSlice.reducerPath] : loginApiSlice.reducer,
     [driverApiSlice.reducerPath] : driverApiSlice.reducer,
     [operatorApiSlice.reducerPath] : operatorApiSlice.reducer,
+    [priceApiSlice.reducerPath] : priceApiSlice.reducer,
   },
   middleware: getDefaultMiddleware =>
       getDefaultMiddleware()
@@ -21,6 +23,7 @@ export const store = configureStore({
         .concat(loginApiSlice.middleware)
         .concat(driverApiSlice.middleware)
         .concat(operatorApiSlice.middleware)
+        .concat(priceApiSlice.middleware)
 });
 
 export type AppDispatch = typeof store.dispatch;

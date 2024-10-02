@@ -3,19 +3,13 @@ import { useTranslation } from 'react-i18next';
 import './index.scss'
 import TaxiDialog from '../../components/Dialog/TaxtDialog';
 import React, { useEffect, useState } from 'react';
-import { useAddVehicleMutation } from '../../api/vehicleApiSlice';
-import DriverCard from '../../components/driverCard';
 import { useDriverUpdateMutation, useLazyDeleteDriverQuery, useLazyGetDriversQuery, useRegisterMutation } from '../../api/driverApiSlice';
-import { useNavigate } from 'react-router';
 import { TLocationData } from '../../types/geoLocation';
-import Typography from '@mui/material/Typography';
-import LogoContainer from '../../components/logoContainer';
-import styled from '@emotion/styled';
 import { TCreateDriver, TCreateDriverRes, TDriver } from '../../types/driver';
 import GeocodingAutocomplete from '../../components/locationSearch';
 import TaxiAlert from '../../components/Alert';
 import AdminDriverCard from '../../components/adminDriverCard';
-import { idText } from 'typescript';
+
 
 export default function DriverPage() {
   const { t, i18n } = useTranslation();
