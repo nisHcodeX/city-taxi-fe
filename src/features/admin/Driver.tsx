@@ -58,7 +58,7 @@ export default function DriverPage() {
         .unwrap()
         .then(res => { setMessage({ message: 'Successfuly driver updated', type: 'info' }), triggerGetDrivers() })
         .catch(err => setMessage({ message: err?.data?.message, type: 'error' }));
-        
+
     } else {
       triggerRegister(data)
         .unwrap()
@@ -91,9 +91,9 @@ export default function DriverPage() {
       setFirstNameError(false);
       setFirstNameErrorMessage('');
     }
-    if (!driverLicense.value || !/^\d+$/.test(driverLicense.value)) {
+    if (!driverLicense.value || !/^[A-Za-z]\d{7}$/.test(driverLicense.value)) {
       setLastNameError(true);
-      setLastNameErrorMessage('Please enter a valid Driver license');
+      setLastNameErrorMessage('Please enter a valid Driver License (1 letter followed by 7 digits)');
       isValid = false;
     } else {
       setLastNameError(false);

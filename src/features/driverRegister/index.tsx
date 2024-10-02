@@ -73,14 +73,14 @@ export default function DriverSignInPage() {
             setFirstNameError(false);
             setFirstNameErrorMessage('');
         }
-        if (!driverLicense.value || !/^\d+$/.test(driverLicense.value)) {
+        if (!driverLicense.value || !/^[A-Za-z]\d{7}$/.test(driverLicense.value)) {
             setLastNameError(true);
-            setLastNameErrorMessage('Please enter a valid Driver license');
+            setLastNameErrorMessage('Please enter a valid Driver License (1 letter followed by 7 digits)');
             isValid = false;
         } else {
             setLastNameError(false);
             setLastNameErrorMessage('');
-        }        
+        } 
         if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
             setEmailError(true);
             setEmailErrorMessage('Please enter a valid email address.');
