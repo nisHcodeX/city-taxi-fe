@@ -42,4 +42,4 @@ export const operatorApiSlice = createApi({
   }),
 });
 
-export const { useGetOperatorByIdQuery, useLazyGetOperatorsQuery, useOperatorRegisterMutation, useLazyDeleteOperatorQuery, useOperatorUpdateMutation } = operatorApiSlice
+export const { useGetOperatorByIdQuery, useLazyGetOperatorByIdQuery,useLazyGetOperatorsQuery, useOperatorRegisterMutation, useLazyDeleteOperatorQuery, useOperatorUpdateMutation } = operatorApiSlice

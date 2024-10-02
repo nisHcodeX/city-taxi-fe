@@ -188,11 +188,11 @@ export default function Profile() {
                                             autoComplete="email"
                                             autoFocus
                                             required
-                                            value={'shalin@gmail.com'}
                                             fullWidth
                                             variant="outlined"
                                             color={emailError ? 'error' : 'primary'}
                                             sx={{ ariaLabel: 'email' }}
+                                            disabled
                                             defaultValue={driverData[0].email || ''}
                                         />
                                     </FormControl>
