@@ -21,12 +21,32 @@ export const customerApiSlice = createApi({
         }),
     }),
     getCustomers: builder.query<TCreateCustomerRes[], void>({
-        query: (id) => ({
+        query: () => ({
             url : `/customer`,
             method: 'GET'
         }),
     }),
+    customerUpdate: builder.mutation<any, any>({
+      query: (data) => ({
+        url: '/customer',
+        method: 'PATCH',
+        body: data,
+      }),
+    }),
+    deleteCustomer: builder.query<any, number>({
+      query: (ids) => ({
+        url: `/customer`,
+        method: 'DELETE',
+        params: { ids }
+      }),
+    }),
   }),
 });
 
-export const { useRegisterMutation, useLazyGetCustomerQuery, useGetCustomersQuery } = customerApiSlice
+export const { 
+  useRegisterMutation, 
+  useLazyGetCustomerQuery, 
+  useLazyGetCustomersQuery, 
+  useCustomerUpdateMutation,
+  useLazyDeleteCustomerQuery,
+  useGetCustomersQuery } = customerApiSlice

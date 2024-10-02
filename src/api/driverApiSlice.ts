@@ -25,6 +25,13 @@ export const driverApiSlice = createApi({
         params: { id }
       }),
     }),
+    driverUpdate: builder.mutation<any, any>({
+      query: (data) => ({
+        url: '/driver',
+        method: 'PATCH',
+        body: data,
+      }),
+    }),
     getDrivers: builder.query<any, void>({
       query: () => ({
         url: `/driver`,
@@ -41,4 +48,11 @@ export const driverApiSlice = createApi({
   }),
 });
 
-export const { useRegisterMutation, useGetDriverQuery, useGetDriversQuery, useLazyGetDriversQuery, useLazyGetNearByQuery, useLazyDeleteDriverQuery } = driverApiSlice
+export const {
+  useRegisterMutation,
+  useGetDriverQuery,
+  useGetDriversQuery,
+  useLazyGetDriversQuery,
+  useLazyGetNearByQuery,
+  useDriverUpdateMutation,
+  useLazyDeleteDriverQuery } = driverApiSlice

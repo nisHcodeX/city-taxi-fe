@@ -5,7 +5,7 @@ import TaxiDialog from '../../components/Dialog/TaxtDialog';
 import React, { useEffect, useState } from 'react';
 import { useAddVehicleMutation } from '../../api/vehicleApiSlice';
 import DriverCard from '../../components/driverCard';
-import { useLazyDeleteDriverQuery, useLazyGetDriversQuery, useRegisterMutation } from '../../api/driverApiSlice';
+import { useDriverUpdateMutation, useLazyDeleteDriverQuery, useLazyGetDriversQuery, useRegisterMutation } from '../../api/driverApiSlice';
 import { useNavigate } from 'react-router';
 import { TLocationData } from '../../types/geoLocation';
 import Typography from '@mui/material/Typography';
@@ -15,11 +15,13 @@ import { TCreateDriver, TCreateDriverRes, TDriver } from '../../types/driver';
 import GeocodingAutocomplete from '../../components/locationSearch';
 import TaxiAlert from '../../components/Alert';
 import AdminDriverCard from '../../components/adminDriverCard';
+import { idText } from 'typescript';
 
 export default function DriverPage() {
   const { t, i18n } = useTranslation();
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [triggerRegister, { isLoading }] = useRegisterMutation();
+  const [triggerUpdateDriver, { isLoading: isUpdateDriverLoading }] = useDriverUpdateMutation();
   const [triggerGetDrivers, { isLoading: isDriversLoading, data: driversList }] = useLazyGetDriversQuery();
   const [triggerDeleteDriver] = useLazyDeleteDriverQuery();
   const [firstNameError, setFirstNameError] = React.useState(false);
@@ -48,8 +50,8 @@ export default function DriverPage() {
   };
   const onUpdateClick = (id: number) => {
     setOpenDialog(true);
-    const driver = driversList.find((driver: TDriver)=> driver.id == id);
-    if(driver){
+    const driver = driversList.find((driver: TDriver) => driver.id == id);
+    if (driver) {
       setupdatedDriver(driver)
     }
   };
@@ -57,10 +59,12 @@ export default function DriverPage() {
   const handleRegister = async (data: TCreateDriver) => {
     setMessage(null);
     if (updatedDriver) {
-      triggerRegister(data)
+      const updated = { id: updatedDriver.id, ...data }
+      triggerUpdateDriver(updated)
         .unwrap()
-        .then(res => { setMessage({ message: 'Successfuly driver updated', type: 'info' }) })
+        .then(res => { setMessage({ message: 'Successfuly driver updated', type: 'info' }), triggerGetDrivers() })
         .catch(err => setMessage({ message: err?.data?.message, type: 'error' }));
+        
     } else {
       triggerRegister(data)
         .unwrap()
@@ -68,6 +72,12 @@ export default function DriverPage() {
         .catch(err => setMessage({ message: err?.data?.message, type: 'error' }));
     }
     setOpenDialog(false);
+  };
+
+  const onCloseClick = () => {
+    setMessage(null);
+    setOpenDialog(false);
+    setupdatedDriver(undefined);
   };
 
   const validateInputs = () => {
@@ -245,7 +255,7 @@ export default function DriverPage() {
     <div>
       <h2 className='title-dash'>Drivers List</h2>
       {message && <TaxiAlert text={message.message} severity={message.type} onClose={() => setMessage(null)} />}
-      <TaxiDialog open={openDialog} handleClose={() => setOpenDialog(false)} title={'add Driver to system'} infoText={"You can add Driver in here"} children={addDriver()} handleContinue={() => validateInputs()} />
+      <TaxiDialog open={openDialog} handleClose={onCloseClick} title={'add Driver to system'} infoText={"You can add Driver in here"} children={addDriver()} handleContinue={() => validateInputs()} />
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
         <div className="add-driver-container">
           <Button
