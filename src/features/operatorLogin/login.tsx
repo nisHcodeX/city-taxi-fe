@@ -1,29 +1,20 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import CssBaseline from '@mui/material/CssBaseline';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Divider from '@mui/material/Divider';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
-import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
-import { Roles } from '../../const';
+import { accountType, Roles } from '../../const';
 import { useNavigate } from 'react-router';
 import LogoContainer from '../../components/logoContainer';
-import { useLoginMutation } from '../../api/loginApiSlice';
+import { useInternalLoginMutation, useLoginMutation } from '../../api/loginApiSlice';
 import { AlertColor, CircularProgress } from '@mui/material';
 import { TLoggeedData, TLoginData } from '../../types/login';
 import TaxiAlert from '../../components/Alert';
-// import ForgotPassword from './ForgotPassword';
-// import { GoogleIcon, FacebookIcon, SitemarkIcon } from './CustomIcons';
-// import AppTheme from '../shared-theme/AppTheme';
-// import ColorModeSelect from '../shared-theme/ColorModeSelect';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -62,7 +53,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean, loginType:
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
-  const [triggerLogin, { isLoading }] = useLoginMutation();
+  const [triggerLogin, { isLoading }] = useInternalLoginMutation();
   const [message, setMessage] = React.useState<{message: string, type: AlertColor}| null>(null);
   const handleClickOpen = () => {
     setOpen(true);
@@ -74,7 +65,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean, loginType:
 
   const loginSuccess = (res: TLoggeedData) => {
     localStorage.setItem('account', JSON.stringify(res));
-    if(res.accountType == "OPERATOR"){
+    if(res.accountType == accountType.telephoneOperator){
       navigate(`/operator/dashboard`);
     }
   };

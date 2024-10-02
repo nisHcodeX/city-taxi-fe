@@ -14,11 +14,11 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
-import { Roles } from '../../const';
+import { accountType, Roles } from '../../const';
 import { useNavigate } from 'react-router';
 import LogoContainer from '../../components/logoContainer';
 import { AlertColor, CircularProgress } from '@mui/material';
-import { useLoginMutation } from '../../api/loginApiSlice';
+import { useInternalLoginMutation } from '../../api/loginApiSlice';
 import { TLoggeedData, TLoginData } from '../../types/login';
 
 
@@ -58,7 +58,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean, loginType:
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
-  const [triggerLogin, { isLoading }] = useLoginMutation();
+  const [triggerLogin, { isLoading }] = useInternalLoginMutation();
   const [message, setMessage] = React.useState<{message: string, type: AlertColor}| null>(null);
   const navigate = useNavigate()
   const handleClickOpen = () => {
@@ -71,7 +71,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean, loginType:
 
   const loginSuccess = (res: TLoggeedData) => {
     localStorage.setItem('account', JSON.stringify(res));
-    if(res.accountType == "ADMIN"){
+    if(res.accountType == accountType.admin){
       navigate(`/admin/dashboard`);
     }
   };

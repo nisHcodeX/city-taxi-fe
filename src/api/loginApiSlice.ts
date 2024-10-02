@@ -13,7 +13,14 @@ export const loginApiSlice = createApi({
         body: data,
       }),
     }),
+    internalLogin: builder.mutation<any, TLoginData>({
+      query: (data) => ({
+        url: '/internal/login',
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation, } = loginApiSlice
+export const { useLoginMutation, useInternalLoginMutation } = loginApiSlice

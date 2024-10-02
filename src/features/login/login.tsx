@@ -14,7 +14,7 @@ import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import ForgotPassword from './ForgotPassword';
-import { Roles } from '../../const';
+import { accountType, Roles } from '../../const';
 import { useNavigate } from 'react-router';
 import LogoContainer from '../../components/logoContainer';
 import { TLoggeedData, TLoginData } from '../../types/login';
@@ -72,7 +72,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean, loginType:
 
   const loginSuccess = (res: TLoggeedData) => {
     localStorage.setItem('account', JSON.stringify(res));
-    if(res.accountType == "CUSTOMER"){
+    if(res.accountType == accountType.customer){
       navigate('/');
     }else{
       navigate('/driver/dashboard')
