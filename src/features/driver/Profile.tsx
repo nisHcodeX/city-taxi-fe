@@ -1,13 +1,15 @@
 import { useTranslation } from 'react-i18next';
 import './index.scss';
 import { AlertColor, Box, Button, Card, CardContent, CircularProgress, FormControl, FormLabel, Stack, TextField } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { TLocationData } from '../../types/geoLocation';
 import { TCreateDriver } from '../../types/driver';
-import { useRegisterMutation } from '../../api/customerApiSlice';
+import { useDriverUpdateMutation, useLazyGetDriverQuery } from '../../api/driverApiSlice';
 import TaxiAlert from '../../components/Alert';
 import GeocodingAutocomplete from '../../components/locationSearch';
 import styled from '@emotion/styled';
+import { accountType } from '../../const';
+import { useNavigate } from 'react-router';
 
 const SignInContainer = styled(Stack)(({ theme }) => ({
     '&::before': {
@@ -24,7 +26,9 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 
 export default function Profile() {
     const { t, i18n } = useTranslation();
-    const [triggerRegister, { isLoading }] = useRegisterMutation();
+    const [triggerUpdateDriver, { isLoading }] = useDriverUpdateMutation();
+    const [triggerDriver, { isLoading: isdriverLoading, data: driverData }] = useLazyGetDriverQuery();
+    const navigate = useNavigate();
 
     const [firstNameError, setFirstNameError] = React.useState(false);
     const [firstNameErrorMessage, setFirstNameErrorMessage] = React.useState('');
@@ -37,11 +41,24 @@ export default function Profile() {
     const [locationError, setLocationError] = React.useState(false);
     const [message, setMessage] = React.useState<{ message: string, type: AlertColor } | null>(null);
     const [locationData, setLocationData] = React.useState<TLocationData | undefined>(undefined)
+    const storedAccount = localStorage.getItem('account');
+    const accData = storedAccount ? JSON.parse(storedAccount) : null;
 
+    useEffect(() => {
+        if (!accData) {
+            navigate('/login');
+        } else if (accData.accountType == accountType.driver) {
+            triggerDriver(1);
+        } else {
+            localStorage.removeItem('account');
+            navigate('/login');
+        }
+    }, []);
 
+    
     const handleRegister = async (data: TCreateDriver) => {
         setMessage(null);
-        triggerRegister(data)
+        triggerUpdateDriver(data)
             .unwrap()
             .then(res => { setMessage({ message: 'Successfuly Updated driver', type: 'success' }) })
             .catch(err => setMessage({ message: err?.data?.message, type: 'error' }));
@@ -102,7 +119,7 @@ export default function Profile() {
             <h2 className='title-dash'>Driver Profile</h2>
             <div style={{ display: 'flex', flexWrap: 'wrap' }}></div>
             <div className="driver-body">
-                <SignInContainer>
+                {driverData ? <SignInContainer>
                     {message && <TaxiAlert text={message.message} severity={message.type} onClose={() => setMessage(null)} />}
                     <Box sx={{ width: '100%', typography: 'body1' }} className={'profile-wrapper'}>
                         <CardContent sx={{ width: '800px' }}>
@@ -135,6 +152,7 @@ export default function Profile() {
                                             variant="outlined"
                                             color={firstNameError ? 'error' : 'primary'}
                                             sx={{ ariaLabel: 'firstName' }}
+                                            defaultValue={driverData[0].name || ''}
                                         />
                                     </FormControl>
                                     <FormControl>
@@ -154,6 +172,7 @@ export default function Profile() {
                                             variant="outlined"
                                             color={lastNameError ? 'error' : 'primary'}
                                             sx={{ ariaLabel: 'lastName' }}
+                                            defaultValue={driverData[0].driverLicense || ''}
                                         />
                                     </FormControl>
                                     <FormControl>
@@ -174,6 +193,7 @@ export default function Profile() {
                                             variant="outlined"
                                             color={emailError ? 'error' : 'primary'}
                                             sx={{ ariaLabel: 'email' }}
+                                            defaultValue={driverData[0].email || ''}
                                         />
                                     </FormControl>
                                     <FormControl>
@@ -193,10 +213,11 @@ export default function Profile() {
                                             variant="outlined"
                                             color={phoneNumberError ? 'error' : 'primary'}
                                             sx={{ ariaLabel: 'phonenumber' }}
+                                            defaultValue={driverData[0].phoneNumber || ''}
                                         />
                                     </FormControl>
                                     <FormControl>
-                                        <GeocodingAutocomplete results={(data) => setLocationData(data)} />
+                                        <GeocodingAutocomplete results={(data) => setLocationData(data)} initialLat={driverData[0].latitude} initialLng={driverData[0].longitude} />
                                         {locationError && <p className="location-error" id="email-helper-text">Please select location.</p>}
                                     </FormControl>
                                     <Button
@@ -210,7 +231,7 @@ export default function Profile() {
                             </Card>
                         </CardContent>
                     </Box>
-                </SignInContainer>
+                </SignInContainer> : <CircularProgress />}
             </div>
         </div>
     );

@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import './index.scss';
-import UserRideCrd from '../../components/userRideCard';
 import { AlertColor, Box, Button, Card, CardContent, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormLabel, TextField } from '@mui/material';
 import TaxiAlert from '../../components/Alert';
 import { useState } from 'react';
