@@ -45,9 +45,45 @@ type TDriver = {
     updatedAt: string | null; 
 }
 
+type VehicleType = {
+    id: number;
+    name: string;
+    pricePerMeter: number;
+    seatCount: number;
+    createdAt: string;
+    updatedAt: string | null;
+  };
+  
+  type Vehicle = {
+    id: number;
+    manufacturer: string;
+    model: string;
+    colour: string;
+    licensePlate: string;
+    vehicleType: VehicleType;
+    createdAt: string;
+    updatedAt: string | null;
+  };
+  
+  type TDriverNearByRes = {
+    id: number;
+    name: string;
+    email: string;
+    phoneNumber: string;
+    driverLicense: string;
+    availability:  'BUSY' | 'AVAILABLE';
+    latitude: number;
+    longitude: number;
+    locationName: string;
+    vehicle: Vehicle;
+    createdAt: string;
+    updatedAt: string;
+  };
+  
 export type {
     TCreateDriver,
     TDriverNearBy,
+    TDriverNearByRes,
     TCreateDriverRes,
     TDriver
 }

@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from './interceptorsSlice';
-import { TCreateDriver, TCreateDriverRes, TDriver, TDriverNearBy } from '../types/driver';
+import { TCreateDriver, TCreateDriverRes, TDriver, TDriverNearBy, TDriverNearByRes } from '../types/driver';
 
 export const driverApiSlice = createApi({
   reducerPath: 'driverApi',
@@ -13,7 +13,7 @@ export const driverApiSlice = createApi({
         body: data,
       }),
     }),
-    getNearBy: builder.query<any, TDriverNearBy>({
+    getNearBy: builder.query<TDriverNearByRes[], TDriverNearBy>({
       query: ({ radius, lat, lng }) => ({
         url: 'driver/nearby',
         params: { radius, lat, lng }

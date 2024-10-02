@@ -4,22 +4,25 @@ import { AlertColor, Box, Button, CircularProgress, Dialog, DialogActions, Dialo
 import { useEffect, useState } from 'react';
 import GeocodingAutocomplete from '../../components/locationSearch';
 import TaxiCard from '../../components/taxiCard';
-import { VehicleType } from '../../const';
 import { TLocationData } from '../../types/geoLocation';
-import { useGetDriversQuery } from '../../api/driverApiSlice';
+import { useLazyGetNearByQuery } from '../../api/driverApiSlice';
 import TaxiAlert from '../../components/Alert';
 import AddCustomerByOperator from './addcutomer';
 import { TCreateCustomerRes } from '../../types/customer';
+import { TDriverNearByRes } from '../../types/driver';
+import LocationDataNotFound from '../../components/locationNotFound';
 export default function Dashboard() {
   const { t, i18n } = useTranslation();
 
-  const { data, error, isLoading } = useGetDriversQuery();
+  // const { data, error, isLoading } = useGetDriversQuery();
+  const [triggerNearbyDriver, { data, isLoading, isError }] = useLazyGetNearByQuery();
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [message, setMessage] = useState<{ message: string, type: AlertColor } | null>(null);
   const [locationData, setLocationData] = useState<TLocationData | undefined>(undefined)
   const [customerData, setCustomerData] = useState<TCreateCustomerRes | undefined>(undefined)
-  const [open, setOpen] = useState<boolean>(false)
-  const onBook = () => {
+  const [open, setOpen] = useState<boolean>(false);
+
+  const onBook = (driver: TDriverNearByRes) => {
     if (customerData) {
       setOpen(true);
     } else {
@@ -41,14 +44,10 @@ export default function Dashboard() {
   }
 
   useEffect(() => {
-    return () => {
-      if (locationData?.lat && locationData.lng) {
-        (async () => {
-          // const { data, isLoading, isError } = await trigerNearbyDriver({ radius: 3, lat: locationData.lat, lng: locationData.lng });
-        })()
-      }
-    };
-  }, [locationData]);
+    if (locationData?.lat && locationData.lng) {
+      triggerNearbyDriver({ radius: 4, lat: locationData.lat, lng: locationData.lng });
+    }
+  }, [locationData, triggerNearbyDriver]);
 
   const customerDataGetter = (data: TCreateCustomerRes) => {
     setCustomerData(data);
@@ -110,9 +109,13 @@ export default function Dashboard() {
             isLoading && <CircularProgress />
           }
           <div className="ride-body">
-            <TaxiCard vehicleType={VehicleType.BIKE} onRideBook={() => onBook()} />
-            <TaxiCard vehicleType={VehicleType.CAR} onRideBook={() => onBook()} />
-            <TaxiCard vehicleType={VehicleType.BIKE} onRideBook={() => onBook()} />
+            {
+              isLoading && <CircularProgress />
+            }
+            {
+              (data && !isLoading) ? data.map((driver, index) => <TaxiCard key={index} data={driver} onRideBook={() => onBook(driver)} />)
+                : <LocationDataNotFound />
+            }
           </div>
         </Box>
       </div>

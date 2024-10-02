@@ -10,15 +10,17 @@ import { VehicleType } from '../../const';
 import GeocodingAutocomplete from '../../components/locationSearch';
 import { useEffect, useState } from 'react';
 import { TLocationData } from '../../types/geoLocation';
-import {  useLazyGetNearByQuery } from '../../api/driverApiSlice';
+import { useLazyGetNearByQuery } from '../../api/driverApiSlice';
 import TaxiAlert from '../../components/Alert';
+import { TDriverNearByRes } from '../../types/driver';
+import LocationDataNotFound from '../../components/locationNotFound';
 
 
 export default function Home() {
   const navigate = useNavigate();
   const [triggerNearbyDriver, { data, isLoading, isError }] = useLazyGetNearByQuery();
   const [message, setMessage] = useState<{ message: string, type: AlertColor } | null>(null);
-  const [locationData, setLocationData] = useState<TLocationData | undefined>({address: 'galle', lat:6.026143327519091, lng: 80.21649701908821 })
+  const [locationData, setLocationData] = useState<TLocationData | undefined>({ address: 'galle', lat: 6.026143327519091, lng: 80.21649701908821 })
   const [open, setOpen] = useState<boolean>(false);
   const storedAccount = localStorage.getItem('account');
   const accData = storedAccount ? JSON.parse(storedAccount) : null;
@@ -35,7 +37,8 @@ export default function Home() {
   const onUserClick = () => {
     navigate('/user/dashboard');
   };
-  const onBook = () => {
+  const onBook = (driver: TDriverNearByRes) => {
+    console.log('driver', driver)
     setOpen(true);
   };
   const handleContinue = () => {
@@ -100,9 +103,10 @@ export default function Home() {
         {
           isLoading && <CircularProgress />
         }
-        <TaxiCard vehicleType={VehicleType.BIKE} onRideBook={() => onBook()} />
-        <TaxiCard vehicleType={VehicleType.CAR} onRideBook={() => onBook()} />
-        <TaxiCard vehicleType={VehicleType.BIKE} onRideBook={() => onBook()} />
+        {
+          (data && !isLoading) ? data.map((driver, index) => <TaxiCard key={index} data={driver} onRideBook={() => onBook(driver)} />)
+            : <LocationDataNotFound />
+        }
       </Box>
     </div>
   );
