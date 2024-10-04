@@ -37,12 +37,14 @@ type TDriver = {
     email: string;
     phoneNumber: string;
     driverLicense: string;
+    avgRating: number;
     availability: 'BUSY' | 'AVAILABLE';
     latitude: number;
     longitude: number;
     locationName: string;
     createdAt: string; 
     updatedAt: string | null; 
+    vehicles: Vehicle[]
 }
 
 type VehicleType = {

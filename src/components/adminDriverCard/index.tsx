@@ -2,6 +2,7 @@ import { Button, Rating } from '@mui/material'
 import React from 'react'
 import './index.scss'
 import { TDriver } from '../../types/driver'
+import { VehicleType } from '../../const';
 
 interface CustomerCardProps {
     data: TDriver,
@@ -9,7 +10,7 @@ interface CustomerCardProps {
     onDeleteClick: (id: number) => void;
 }
 
-const AdminDriverCard = ({ data,  onUpdateClick, onDeleteClick }: CustomerCardProps) => {
+const AdminDriverCard = ({ data, onUpdateClick, onDeleteClick }: CustomerCardProps) => {
 
     return (
         <div className="customer-card-content">
@@ -18,19 +19,19 @@ const AdminDriverCard = ({ data,  onUpdateClick, onDeleteClick }: CustomerCardPr
             <div className="detail">Driver License : {data.driverLicense}</div>
             <div className="detail">Driver Phone Number: {data.phoneNumber}</div>
             <div className="detail">Driver Location: {data.locationName}</div>
-            <div className="detail">Driver Reviews: <Rating value={5}/></div>
-            <div className="detail-status">Driver Status: {data.availability}</div>
+            <div className="detail">Driver Reviews: <Rating value={data.avgRating} /></div>
+            <div className={`detail-status ${data.availability == 'AVAILABLE' ? 'available' : ''}`}>Driver Status: {data.availability}</div>
             <div>
-            {/* <div className="vehicle-container">
-            <div className="title">Vehicle Type : Car</div>
-            <div className="detail">Vehicle id: ACD-55401</div>
-            <div className="detail">Vehicle Location: Matara</div>
-            </div>
-            <div className="vehicle-container" style={{paddingTop: '16px'}}>
-            <div className="title">Vehicle Type : Bike</div>
-            <div className="detail">Vehicle id: AKD-50403</div>
-            <div className="detail">Vehicle Location: Matara</div>
-            </div> */}
+                {data.vehicles && data.vehicles.length > 0 ?
+                    data.vehicles.map((vehicle, index) =>
+                        <div key={index} className="vehicle-container">
+                            <div className="title vehi">Vehicle Type : {vehicle.manufacturer} {vehicle.model}</div>
+                            <div className="detail">Vehicle id: {vehicle.licensePlate}</div>
+                            <div className="detail">Vehicle Type:{vehicle.vehicleType.name}</div>
+                            <div className="detail">Vehicle Color:{vehicle.colour}</div>
+                        </div>
+                    )
+                    : <></>}
             </div>
             <div className="button">
                 {<Button
@@ -39,7 +40,7 @@ const AdminDriverCard = ({ data,  onUpdateClick, onDeleteClick }: CustomerCardPr
                     type="button"
                     fullWidth
                     variant="contained"
-                    onClick={()=>onUpdateClick(data.id)}
+                    onClick={() => onUpdateClick(data.id)}
                 >
                     Update
                 </Button>}
@@ -49,7 +50,7 @@ const AdminDriverCard = ({ data,  onUpdateClick, onDeleteClick }: CustomerCardPr
                     type="button"
                     fullWidth
                     variant="outlined"
-                    onClick={()=>onDeleteClick(data.id)}
+                    onClick={() => onDeleteClick(data.id)}
                 >
                     Delete
                 </Button>}
