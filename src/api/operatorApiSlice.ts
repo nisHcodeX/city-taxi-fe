@@ -17,7 +17,7 @@ export const operatorApiSlice = createApi({
       query: (data) => ({
         url: '/telephone/operator',
         method: 'PATCH',
-        body: data,
+        body: [data],
       }),
     }),
     getOperatorById: builder.query<OperatorCreateRes[], number>({
@@ -42,4 +42,10 @@ export const operatorApiSlice = createApi({
   }),
 });
 
-export const { useGetOperatorByIdQuery, useLazyGetOperatorByIdQuery,useLazyGetOperatorsQuery, useOperatorRegisterMutation, useLazyDeleteOperatorQuery, useOperatorUpdateMutation } = operatorApiSlice
+export const {
+  useGetOperatorByIdQuery,
+  useLazyGetOperatorByIdQuery,
+  useLazyGetOperatorsQuery,
+  useOperatorRegisterMutation,
+  useLazyDeleteOperatorQuery,
+  useOperatorUpdateMutation } = operatorApiSlice

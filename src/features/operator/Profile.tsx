@@ -31,7 +31,7 @@ export default function Profile() {
     if (!accData) {
       navigate('/operatorLogin');
     } else if (accData.accountType == accountType.telephoneOperator) {
-      trigerGetOperator(4);
+      trigerGetOperator(accData.userId);
     } else {
       localStorage.removeItem('account');
       navigate('/operatorLogin');
@@ -40,7 +40,7 @@ export default function Profile() {
 
   const handleRegister = async (data: any) => {
     const updateData = {
-      // id: updateOperator.id, 
+      id: accData.userId, 
       ...data
     }
     triggerOperatorUpdate(updateData)
@@ -53,7 +53,7 @@ export default function Profile() {
   const validateInputs = () => {
 
     const firstName = document.getElementById('firstName') as HTMLInputElement;
-    const lastName = document.getElementById('lastName') as HTMLInputElement;
+    // const lastName = document.getElementById('lastName') as HTMLInputElement;
     const email = document.getElementById('email') as HTMLInputElement;
     const phoneNumber = document.getElementById('phoneNumber') as HTMLInputElement;
 
@@ -67,14 +67,14 @@ export default function Profile() {
       setFirstNameError(false);
       setFirstNameErrorMessage('');
     }
-    if (!lastName.value) {
-      setLastNameError(true);
-      setLastNameErrorMessage('Please enter last name');
-      isValid = false;
-    } else {
-      setLastNameError(false);
-      setLastNameErrorMessage('');
-    }
+    // if (!lastName.value) {
+    //   setLastNameError(true);
+    //   setLastNameErrorMessage('Please enter last name');
+    //   isValid = false;
+    // } else {
+    //   setLastNameError(false);
+    //   setLastNameErrorMessage('');
+    // }
     if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
       setEmailError(true);
       setEmailErrorMessage('Please enter a valid email address.');
@@ -135,7 +135,7 @@ export default function Profile() {
                       defaultValue={operatorData[0].name}
                     />
                   </FormControl>
-                  <FormControl>
+                  {/* <FormControl>
                     <FormLabel className="sign-label" htmlFor="lastName">Last Name</FormLabel>
                     <TextField
                       className="input-item"
@@ -154,7 +154,7 @@ export default function Profile() {
                       sx={{ ariaLabel: 'lastName' }}
                       defaultValue={operatorData[0].name}
                     />
-                  </FormControl>
+                  </FormControl> */}
                   <FormControl>
                     <FormLabel className="sign-label" htmlFor="email">Email</FormLabel>
                     <TextField

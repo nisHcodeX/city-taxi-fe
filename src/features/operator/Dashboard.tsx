@@ -44,6 +44,10 @@ export default function Dashboard() {
   }
 
   useEffect(() => {
+    triggerNearbyDriver({ radius: 4, lat: 6.032894799999999, lng: 80.2167912 });
+  }, []);
+
+  useEffect(() => {
     if (locationData?.lat && locationData.lng) {
       triggerNearbyDriver({ radius: 4, lat: locationData.lat, lng: locationData.lng });
     }
@@ -114,7 +118,7 @@ export default function Dashboard() {
             }
             {
               (data && !isLoading) ? data.map((driver, index) => <TaxiCard key={index} data={driver} onRideBook={() => onBook(driver)} />)
-                : <LocationDataNotFound />
+                : <div className="location-no-data"><LocationDataNotFound /></div>
             }
           </div>
         </Box>
