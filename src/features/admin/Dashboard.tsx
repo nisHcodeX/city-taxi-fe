@@ -5,15 +5,18 @@ import TaxiAlert from '../../components/Alert';
 import { useEffect, useState } from 'react';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { useLazyGetMeterPriceQuery, useMeterPriceUpdateMutation } from '../../api/priceApiSlice';
+import { useLazyGetDashboardDetailQuery } from '../../api/adminApiSlice';
 
 export default function Dashboard() {
   const { t, i18n } = useTranslation();
   const [triggerGetMeterPrice, { isLoading, data }] = useLazyGetMeterPriceQuery();
+  const [triggerGetDashboard, { isLoading: isDashboardLoading, data: dashboardData }] = useLazyGetDashboardDetailQuery();
   const [triggerUpdatePrices, { isLoading: isPriceLoading }] = useMeterPriceUpdateMutation();
   const [message, setMessage] = useState<{ message: string, type: AlertColor } | null>(null);
 
   useEffect(() => {
-    triggerGetMeterPrice()
+    triggerGetMeterPrice();
+    triggerGetDashboard()
   }, [])
   const onUpdateBikeClick = (id: number) => {
     const pricePerMeterBike = document.getElementById('pricePerMeterBike') as HTMLInputElement;
@@ -42,20 +45,19 @@ export default function Dashboard() {
         {message && <TaxiAlert text={message.message} severity={message.type} onClose={() => setMessage(null)} />}
       </div>
       <div className="ride-body">
-        <PieChart
-
+        {isDashboardLoading ? <CircularProgress /> : <PieChart
           series={[
             {
               data: [
-                { id: 0, value: 10, label: 'Customers' },
-                { id: 1, value: 15, label: 'Rides' },
-                { id: 2, value: 20, label: 'Drivers' },
+                { id: 0, value: dashboardData?.totalCustomers ?? 1 , label: 'Customers' },
+                { id: 1, value: dashboardData?.totalBookings ?? 1, label: 'Rides' },
+                { id: 2, value: dashboardData?.totalDrivers ?? 1, label: 'Drivers' },
               ],
             },
           ]}
           width={400}
           height={200}
-        />
+        />}
         {isLoading ? <CircularProgress /> :
           <div className='vehicle-price'>
             <h3>Add Vehicle meter Price</h3>

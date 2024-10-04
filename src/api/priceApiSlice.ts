@@ -17,7 +17,7 @@ export const priceApiSlice = createApi({
       query: (data) => ({
         url: '/vehicle/type',
         method: 'PATCH',
-        body: data,
+        body: [data],
       }),
     }),
   }),

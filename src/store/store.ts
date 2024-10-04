@@ -8,6 +8,7 @@ import { operatorApiSlice } from '../api/operatorApiSlice';
 import { priceApiSlice } from '../api/priceApiSlice';
 import { bookingApiSlice } from '../api/bookingApiSlice';
 import { vehicleApiSlice } from '../api/vehicleApiSlice';
+import { adminApiSlice } from '../api/adminApiSlice';
 
 export const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ export const store = configureStore({
     [priceApiSlice.reducerPath] : priceApiSlice.reducer,
     [bookingApiSlice.reducerPath] : bookingApiSlice.reducer,
     [vehicleApiSlice.reducerPath] : vehicleApiSlice.reducer,
+    [adminApiSlice.reducerPath] : adminApiSlice.reducer,
   },
   middleware: getDefaultMiddleware =>
       getDefaultMiddleware()
@@ -30,6 +32,7 @@ export const store = configureStore({
         .concat(priceApiSlice.middleware)
         .concat(bookingApiSlice.middleware)
         .concat(vehicleApiSlice.middleware)
+        .concat(adminApiSlice.middleware)
 });
 
 export type AppDispatch = typeof store.dispatch;
