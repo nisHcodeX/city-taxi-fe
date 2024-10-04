@@ -3,18 +3,24 @@ import { baseQueryWithReauth } from './interceptorsSlice';
 import { TCreateDriver, TCreateDriverRes, TDriverNearBy } from '../types/driver';
 import { TCreateVehicle } from '../types/vehicle';
 
-export const driverApiSlice = createApi({
+export const vehicleApiSlice = createApi({
   reducerPath: 'vehicleApi',
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
-    addVehicle: builder.mutation<any, TCreateVehicle>({
+    addVehicle: builder.mutation<any, TCreateVehicle[]>({
       query: (data) => ({
         url: '/vehicle',
         method: 'POST',
         body: data,
       }),
     }),
+    getVehicleByid: builder.query<any, number>({
+      query: (id) => ({
+        url: '/vehicle',
+        params: { id },
+      }),
+    }),
   }),
 });
 
-export const { useAddVehicleMutation } = driverApiSlice
+export const { useAddVehicleMutation, useLazyGetVehicleByidQuery } = vehicleApiSlice

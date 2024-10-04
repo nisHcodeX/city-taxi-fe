@@ -13,7 +13,16 @@ type TCreateCustomerRes = {
     updatedAt: string;
 };
 
+type TUpdateCustomer = {
+    id: number;       
+    name: string;     
+    email: string;  
+    phoneNumber: string; 
+  }
+  
+
 export type {
     TCreateCustomer,
-    TCreateCustomerRes
+    TCreateCustomerRes,
+    TUpdateCustomer
 }

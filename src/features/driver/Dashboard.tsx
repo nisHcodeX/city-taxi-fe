@@ -1,16 +1,23 @@
-import { Box, Button, CircularProgress, FormControl, FormLabel, MenuItem, Select, TextField } from '@mui/material';
+import { AlertColor, Box, Button, CircularProgress, FormControl, FormLabel, MenuItem, Select, TextField } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import './index.scss'
 import TaxiDialog from '../../components/Dialog/TaxtDialog';
-import React, { useState } from 'react';
-import { useAddVehicleMutation } from '../../api/vehicleApiSlice';
+import React, { useEffect, useState } from 'react';
+import { useAddVehicleMutation, useLazyGetVehicleByidQuery } from '../../api/vehicleApiSlice';
 import DriverCard from '../../components/driverCard';
+import { TCreateVehicle } from '../../types/vehicle';
+import { accountType } from '../../const';
+import { useNavigate } from 'react-router';
+import LogoContainer from '../../components/logoContainer';
+import TaxiAlert from '../../components/Alert';
 
 
 export default function Dashboard() {
   const { t, i18n } = useTranslation();
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [triggerAddVehicle, { isLoading }] = useAddVehicleMutation();
+  const [triggerAddVehicleList, { isLoading: isVehicleLoading, data: vehicleList }] = useLazyGetVehicleByidQuery();
+  const navigate = useNavigate();
 
   const [modelError, setModelError] = React.useState(false);
   const [modelErrorMessage, setModelErrorMessage] = React.useState('');
@@ -20,18 +27,38 @@ export default function Dashboard() {
   const [colourErrorMessage, setColourErrorMessage] = React.useState('');
   const [licensePlateError, setLicensePlateError] = React.useState(false);
   const [licensePlateErrorMessage, setLicensePlateErrorMessage] = React.useState('');
+  const [vehicleTypeId, setVehicleTypeId] = useState(1);
+  const storedAccount = localStorage.getItem('account');
+  const accData = storedAccount ? JSON.parse(storedAccount) : null;
+  const [message, setMessage] = React.useState<{ message: string, type: AlertColor } | null>(null);
 
-  const addVehicleToSystem = () => {
+  useEffect(() => {
 
+    if (!accData) {
+      navigate('/login');
+    } else if (accData.accountType == accountType.driver) {
+      triggerAddVehicleList(accData.userId);
+    } else {
+      localStorage.removeItem('account');
+      navigate('/login');
+    }
+  }, []);
+
+  const addVehicleToSystem = (data: TCreateVehicle) => {
+    setMessage(null)
+    triggerAddVehicle([data])
+    .unwrap()
+    .then(res => { setMessage({ message: 'Successfuly Add Vehicle', type: 'success' }) })
+    .catch(err => setMessage({ message: err?.data?.message, type: 'error' }));
+    setOpenDialog(false);
+    triggerAddVehicleList(accData.userId);
   }
-
   const validateInputs = () => {
 
     const model = document.getElementById('model') as HTMLInputElement;
     const manufacturer = document.getElementById('manufacturer') as HTMLInputElement;
     const colour = document.getElementById('colour') as HTMLInputElement;
     const licensePlate = document.getElementById('licensePlate') as HTMLInputElement;
-    const vehicleTypeId = document.getElementById('vehicleTypeId') as HTMLInputElement;
 
     let isValid = true;
 
@@ -61,22 +88,25 @@ export default function Dashboard() {
     }
     if (!licensePlate.value) {
       setLicensePlateError(true);
-      setLicensePlateErrorMessage('add manufacturer please');
+      setLicensePlateErrorMessage('add liecense plate please');
       isValid = false;
     } else {
       setLicensePlateError(false);
       setLicensePlateErrorMessage('');
     }
-    // if (!lastName.value) {
-    //   setManufacturerError(true);
-    //   setManufacturerErrorMessage('add manufacturer please');
-    //   isValid = false;
-    // } else {
-    //   setManufacturerError(false);
-    //   setManufacturerErrorMessage('');
-    // }
 
-    // if (isValid) handleRegister({ name: firstName.value, email: email.value, phoneNumber: phoneNumber.value });
+    if (isValid) addVehicleToSystem({
+      colour: colour.value,
+      driverId: accData.userId,
+      licensePlate: licensePlate.value,
+      manufacturer: manufacturer.value,
+      model: model.value,
+      vehicleTypeId: vehicleTypeId
+    });
+  };
+
+  const handleVehicleTypeChange = (event: any) => {
+    setVehicleTypeId(event.target.value);
   };
 
   const addVehicle = () => {
@@ -173,20 +203,22 @@ export default function Dashboard() {
           <Select
             labelId="vehicleTypeId"
             id="vehicleTypeId"
-            value={1}
+            value={vehicleTypeId}
+            onChange={handleVehicleTypeChange}
             label=""
           >
-            <MenuItem value={1}>Car</MenuItem>
-            <MenuItem value={2}>Bike</MenuItem>
+            <MenuItem value={1}>Bike</MenuItem>
+            <MenuItem value={2}>Car</MenuItem>
           </Select>
         </FormControl>
       </Box>
     </>
   }
-
+  console.log('vel', vehicleList);
   return (
     <div>
       <h2 className='title-dash'>Driver Dashboard</h2>
+      {message && <TaxiAlert text={message.message} severity={message.type} onClose={() => setMessage(null)} />}
       <TaxiDialog open={openDialog} handleClose={() => setOpenDialog(false)} title={'add vehicle to system'} infoText={"You can add vehicle in here"} children={addVehicle()} handleContinue={() => validateInputs()} />
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
         <div className="add-driver-container">
@@ -202,8 +234,13 @@ export default function Dashboard() {
             My Vehicles List
           </h3>
           <div className='vehicle-container'>
-            <DriverCard vehicleType={1}  />
-            <DriverCard vehicleType={2}  />
+            {isVehicleLoading && <CircularProgress/>}
+            {vehicleList ? <DriverCard vehicleType={2} /> 
+            : 
+            <>
+            <LogoContainer/>
+            <h3 className='no-vhicle'>You haven't added vehicles. Please add a vehicle to the system.</h3>
+            </>}
           </div>
         </div>
       </div>

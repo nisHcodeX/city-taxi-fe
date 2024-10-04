@@ -1,13 +1,13 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from './interceptorsSlice';
 import { TCreateCustomer, TCreateCustomerRes } from '../types/customer';
-import { VoidExpression } from 'typescript';
+import { TCreateBooking } from '../types/booking';
 
-export const customerApiSlice = createApi({
+export const bookingApiSlice = createApi({
   reducerPath: 'bookingApi',
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
-    register: builder.mutation<TCreateCustomerRes, TCreateCustomer>({
+    bookRide: builder.mutation<any, TCreateBooking>({
       query: (data) => ({
         url: '/bookings',
         method: 'POST',
@@ -37,4 +37,5 @@ export const customerApiSlice = createApi({
 });
 
 export const { 
-  } = customerApiSlice
+  useBookRideMutation
+  } = bookingApiSlice

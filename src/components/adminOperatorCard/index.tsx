@@ -1,6 +1,5 @@
 import { Button } from '@mui/material'
 import React from 'react'
-import { VehicleType } from '../../const'
 import './index.scss'
 import { OperatorCreateRes } from '../../types/operator'
 

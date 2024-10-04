@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from './interceptorsSlice';
-import { TCreateCustomer, TCreateCustomerRes } from '../types/customer';
+import { TCreateCustomer, TCreateCustomerRes, TUpdateCustomer } from '../types/customer';
 import { VoidExpression } from 'typescript';
 
 export const customerApiSlice = createApi({
@@ -15,22 +15,22 @@ export const customerApiSlice = createApi({
       }),
     }),
     getCustomer: builder.query<TCreateCustomerRes[], number>({
-        query: (id) => ({
-            url : `/customer`,
-            params: { id }
-        }),
+      query: (id) => ({
+        url: `/customer`,
+        params: { id }
+      }),
     }),
     getCustomers: builder.query<TCreateCustomerRes[], void>({
-        query: () => ({
-            url : `/customer`,
-            method: 'GET'
-        }),
+      query: () => ({
+        url: `/customer`,
+        method: 'GET'
+      }),
     }),
-    customerUpdate: builder.mutation<any, any>({
+    customerUpdate: builder.mutation<any, TUpdateCustomer>({
       query: (data) => ({
         url: '/customer',
         method: 'PATCH',
-        body: data,
+        body: [data],
       }),
     }),
     deleteCustomer: builder.query<any, number>({
@@ -43,10 +43,10 @@ export const customerApiSlice = createApi({
   }),
 });
 
-export const { 
-  useRegisterMutation, 
-  useLazyGetCustomerQuery, 
-  useLazyGetCustomersQuery, 
+export const {
+  useRegisterMutation,
+  useLazyGetCustomerQuery,
+  useLazyGetCustomersQuery,
   useCustomerUpdateMutation,
   useLazyDeleteCustomerQuery,
   useGetCustomersQuery } = customerApiSlice

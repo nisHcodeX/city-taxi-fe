@@ -11,7 +11,7 @@ interface TaxiCardProps {
     onRideBook?: () => void
 }
 export default function TaxiCard({ data, showButton, onRideBook }: TaxiCardProps) {
-    console.log('taxi ', data)
+
     return (
         <CardContent sx={{ padding: '20px', maxWidth: '800px', width: '100%' }}>
             <Card variant='outlined' className='login-card'>
