@@ -11,19 +11,27 @@ import AddCustomerByOperator from './addcutomer';
 import { TCreateCustomerRes } from '../../types/customer';
 import { TDriverNearByRes } from '../../types/driver';
 import LocationDataNotFound from '../../components/locationNotFound';
+import { useBookRideMutation } from '../../api/bookingApiSlice';
+import { TCreateBooking } from '../../types/booking';
 export default function Dashboard() {
   const { t, i18n } = useTranslation();
 
   // const { data, error, isLoading } = useGetDriversQuery();
   const [triggerNearbyDriver, { data, isLoading, isError }] = useLazyGetNearByQuery();
+  const [triggerBookRide, { isLoading: isBookingLoading }] = useBookRideMutation()
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [message, setMessage] = useState<{ message: string, type: AlertColor } | null>(null);
-  const [locationData, setLocationData] = useState<TLocationData | undefined>(undefined)
+  const [locationData, setLocationData] = useState<TLocationData | undefined>({ address: 'galle', lat: 6.026143327519091, lng: 80.21649701908821 });
   const [customerData, setCustomerData] = useState<TCreateCustomerRes | undefined>(undefined)
   const [open, setOpen] = useState<boolean>(false);
+  const [selectedDriver, setSelectedDriver] = useState<TDriverNearByRes | undefined>(undefined);
+  const [startLocationData, setStartLocationData] = useState<TLocationData | undefined>(undefined);
+  const [endLocationData, setEndLocationData] = useState<TLocationData | undefined>(undefined);
 
+  
   const onBook = (driver: TDriverNearByRes) => {
     if (customerData) {
+      setSelectedDriver(driver);
       setOpen(true);
     } else {
       setMessage({ message: 'Please Add customer first', type: 'error' })
@@ -32,20 +40,38 @@ export default function Dashboard() {
   };
   const handleContinue = () => {
     if (customerData) {
-      setMessage({ message: 'Succesfully booked a ride', type: 'success' })
-      setOpen(false);
+      if (!startLocationData) {
+        setMessage({ message: 'Please Select the Start Destination', type: 'error' });
+      } else if (!endLocationData) {
+        setMessage({ message: 'Please Select the End Destination', type: 'error' });
+      } else {
+        const rideData: TCreateBooking = {
+          customerId: customerData.id,
+          destLatitude: endLocationData.lat,
+          destLongitude: endLocationData.lng,
+          driverId: selectedDriver?.id ?? 1,
+          startLatitude: startLocationData.lat,
+          startLongitude: startLocationData.lng
+        };
+  
+        triggerBookRide(rideData)
+          .unwrap()
+          .then(res => { setMessage({ message: 'Successfuly book a ride', type: 'success' }) })
+          .catch(err => setMessage({ message: err?.data?.message, type: 'error' }));
+        setOpen(false);
+      }
+      
     } else {
       setMessage({ message: 'Please Add customer first', type: 'error' })
     }
+    setOpen(false);
+    setSelectedDriver(undefined);
+    setMessage(null)
   };
 
   const locationResults = (data: TLocationData) => {
     data && setLocationData(data);
   }
-
-  useEffect(() => {
-    triggerNearbyDriver({ radius: 4, lat: 6.032894799999999, lng: 80.2167912 });
-  }, []);
 
   useEffect(() => {
     if (locationData?.lat && locationData.lng) {
@@ -55,6 +81,12 @@ export default function Dashboard() {
 
   const customerDataGetter = (data: TCreateCustomerRes) => {
     setCustomerData(data);
+  }
+  const onBackClick = () => {
+    setCustomerData(undefined);
+    setMessage(null)
+    setSelectedDriver(undefined)
+    setOpen(false)
   }
 
   return (
@@ -82,20 +114,17 @@ export default function Dashboard() {
           <DialogContent
             sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '500px' }}
           >
-            <div className='detail' style={{ padding: '10px 20px' }}>Toyota</div>
-            <div className='detail' style={{ padding: '10px 20px' }}>Aqua</div>
-            <div className='detail' style={{ padding: '10px 20px' }}>Price per km Rs 250</div>
-            <div className='detail' style={{ padding: '10px 20px' }}>Customer name : nishedha</div>
-            <div className='detail' style={{ padding: '10px 20px' }}>Customer Email: nishedha.srilak@gamil.com</div>
-            <div className='detail' style={{ padding: '10px 20px' }}>Customer Phone number: +94775145763</div>
+          <div className='detail' style={{ padding: '10px 20px' }}>{selectedDriver?.vehicle.manufacturer} {selectedDriver?.vehicle.model}</div>
+          <div className='detail' style={{ padding: '10px 20px' }}>{selectedDriver?.vehicle.licensePlate}</div>
+          <div className='detail' style={{ padding: '10px 20px' }}>Price per km Rs {selectedDriver?.vehicle.vehicleType.pricePerMeter}</div>
 
             <FormLabel>Start Destination</FormLabel>
-            <GeocodingAutocomplete results={(data) => console.log('data', data)} />
+            <GeocodingAutocomplete initialLat={locationData?.lat} initialLng={locationData?.lng} results={(data) => setStartLocationData(data)} />
             <FormLabel>End Destination</FormLabel>
-            <GeocodingAutocomplete results={(data) => console.log('data', data)} />
+            <GeocodingAutocomplete results={(data) => setEndLocationData(data)} />
           </DialogContent>
           <DialogActions sx={{ pb: 3, px: 3 }}>
-            <Button onClick={() => setOpen(false)}>Cancel</Button>
+            <Button onClick={onBackClick}>Cancel</Button>
             <Button variant="contained" type="button" onClick={handleContinue}>
               Add ride
             </Button>
@@ -106,7 +135,7 @@ export default function Dashboard() {
             <div className="text-container">
             </div>
             <div className="location">
-              <GeocodingAutocomplete results={locationResults} initialLat={6.032894799999999} initialLng={80.2167912} />
+              <GeocodingAutocomplete results={locationResults} initialLat={locationData?.lat} initialLng={locationData?.lng} />
             </div>
           </div>
           {

@@ -2,16 +2,19 @@ import { Box, Button, CircularProgress, FormControl, FormLabel, MenuItem, Select
 import { useTranslation } from 'react-i18next';
 import './index.scss'
 import TaxiDialog from '../../components/Dialog/TaxtDialog';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAddVehicleMutation } from '../../api/vehicleApiSlice';
 import DriverCard from '../../components/driverCard';
 import UserRideCrd from '../../components/userRideCard';
+import { useLazyGetBookingsQuery } from '../../api/bookingApiSlice';
+import { TBookingRide } from '../../types/booking';
 
 
-export default function DriverPage() {
+export default function RidesPage() {
   const { t, i18n } = useTranslation();
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [triggerAddVehicle, { isLoading }] = useAddVehicleMutation();
+  const [triggerGetBookings, { isLoading: isBookingsLoading, data: bookingData }] = useLazyGetBookingsQuery();
 
   const [modelError, setModelError] = React.useState(false);
   const [modelErrorMessage, setModelErrorMessage] = React.useState('');
@@ -22,9 +25,16 @@ export default function DriverPage() {
   const [licensePlateError, setLicensePlateError] = React.useState(false);
   const [licensePlateErrorMessage, setLicensePlateErrorMessage] = React.useState('');
 
-  const addVehicleToSystem = () => {
+  useEffect(() => {
+    triggerGetBookings();
+  }, []);
 
-  }
+  const oReviewRide = (data: TBookingRide) => {
+
+  };
+  const onPayRide = (data: TBookingRide) => {
+
+  };
 
   const validateInputs = () => {
 
@@ -183,7 +193,7 @@ export default function DriverPage() {
       </Box>
     </>
   }
-
+  console.log('bookingData', bookingData)
   return (
     <div>
       <h2 className='title-dash'>Bookings List</h2>
@@ -199,8 +209,8 @@ export default function DriverPage() {
         </div> */}
         <div className="driver-body">
           <div className='vehicle-container'>
-          <UserRideCrd vehicleType={1} />
-          <UserRideCrd vehicleType={2} />
+            {isBookingsLoading && <CircularProgress />}
+            {bookingData ? bookingData.map((booking, index) => <UserRideCrd key={index} data={booking} oReviewRide={() => oReviewRide(booking)} onPayRide={() => onPayRide(booking)} />) : <></>}
           </div>
         </div>
       </div>
