@@ -21,7 +21,7 @@ import { TCreateBooking } from '../../types/booking';
 export default function Home() {
   const navigate = useNavigate();
   const [triggerNearbyDriver, { data, isLoading, isError }] = useLazyGetNearByQuery();
-  const [triggerBookRide, {isLoading: isBookingLoading}] = useBookRideMutation()
+  const [triggerBookRide, { isLoading: isBookingLoading }] = useBookRideMutation()
   const [message, setMessage] = useState<{ message: string, type: AlertColor } | null>(null);
   const [locationData, setLocationData] = useState<TLocationData | undefined>({ address: 'galle', lat: 6.026143327519091, lng: 80.21649701908821 });
   const [startLocationData, setStartLocationData] = useState<TLocationData | undefined>(undefined);
@@ -54,19 +54,19 @@ export default function Home() {
     } else if (!endLocationData) {
       setMessage({ message: 'Please Select the End Destination', type: 'error' });
     } else {
-      const rideData: TCreateBooking ={
-        customerId: accData.accountId,
+      const rideData: TCreateBooking = {
+        customerId: accData.userId,
         destLatitude: endLocationData.lat,
         destLongitude: endLocationData.lng,
-        driverId: 1,
+        driverId: selectedDriver?.id ?? 1,
         startLatitude: startLocationData.lat,
         startLongitude: startLocationData.lng
       };
 
       triggerBookRide(rideData)
-      .unwrap()
-      .then(res => { setMessage({ message: 'Successfuly book a ride', type: 'success' }) })
-      .catch(err => setMessage({ message: err?.data?.message, type: 'error' }));
+        .unwrap()
+        .then(res => { setMessage({ message: 'Successfuly book a ride', type: 'success' }) })
+        .catch(err => setMessage({ message: err?.data?.message, type: 'error' }));
       setOpen(false);
     }
   };

@@ -2,37 +2,35 @@ import { Button, Card, CardContent } from "@mui/material";
 import { TaxiBike, TaxiCar } from "../../assets/img";
 import { VehicleType } from "../../const";
 import './index.scss'
+import { TVehicle } from "../../types/driver";
 interface TaxiCardProps {
-    vehicleType: VehicleType,
-    showButton?: boolean
+    data: TVehicle;
+    showButton?: boolean;
+    onUpdateVehicle: ()=>void
 }
-export default function DriverCard({ vehicleType, showButton }: TaxiCardProps) {
-
-    const onRideBook = () => {
-        console.log('booked');
-    }
+export default function DriverCard({ data, showButton, onUpdateVehicle }: TaxiCardProps) {
 
     return (
         <CardContent sx={{ padding: '20px', maxWidth: '800px', width: '100%' }}>
             <Card variant='outlined' className='login-card'>
                 <div className="taxt-card-wrapper">
                     <div className="taxt-card-img">
-                        {vehicleType == VehicleType.CAR ? <img src={TaxiCar} /> : <img src={TaxiBike} />}
+                        {data.vehicleType.id == VehicleType.CAR ? <img src={TaxiBike} /> : <img src={TaxiCar} />}
                     </div>
                     <div className="taxt-card-content">
-                        <div className="title">{vehicleType == VehicleType.CAR ? 'Aqua': 'Fz-v2'}</div>
-                        <div className="detail">Manufacturer : {vehicleType == VehicleType.CAR ? 'Toyota': 'Yamha'}</div>
-                        <div className="detail">Passenger Count : {vehicleType == VehicleType.CAR ? 4: 1}</div>
-                        <div className="detail">Vehicle Number: {vehicleType == VehicleType.CAR ? 'AB-52476': 'CAD-2059'}</div>
-                        <div className="detail">Color {vehicleType == VehicleType.CAR ? 'white': 'blue'}</div>
+                        <div className="title"> {data.model}</div>
+                        <div className="detail">Manufacturer : {data.manufacturer}</div>
+                        <div className="detail">Passenger Count : {data.vehicleType.id == VehicleType.CAR ? 1 : 4}</div>
+                        <div className="detail">Vehicle Number: {data.licensePlate}</div>
+                        <div className="detail">Color {data.colour}</div>
                         <div className="button">
-                            {showButton ? <></>: <Button
+                            {showButton ? <></> : <Button
                                 sx={{ marginTop: '8px', }}
                                 color="success"
                                 type="button"
                                 fullWidth
                                 variant="contained"
-                                onClick={onRideBook}
+                                onClick={onUpdateVehicle}
                             >
                                 Update Details
                             </Button>}

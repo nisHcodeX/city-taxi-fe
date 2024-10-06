@@ -11,7 +11,7 @@ export const bookingApiSlice = createApi({
       query: (data) => ({
         url: '/bookings',
         method: 'POST',
-        body: data,
+        body: [data],
       }),
     }),
     getBookingByid: builder.query<TCreateCustomerRes[], number>({

@@ -44,7 +44,7 @@ type TDriver = {
     locationName: string;
     createdAt: string; 
     updatedAt: string | null; 
-    vehicles: Vehicle[]
+    vehicles?:TVehicle[]
 }
 
 type VehicleType = {
@@ -56,7 +56,7 @@ type VehicleType = {
     updatedAt: string | null;
   };
   
-  type Vehicle = {
+  type TVehicle = {
     id: number;
     manufacturer: string;
     model: string;
@@ -71,13 +71,14 @@ type VehicleType = {
     id: number;
     name: string;
     email: string;
+    avgRating: number
     phoneNumber: string;
     driverLicense: string;
     availability:  'BUSY' | 'AVAILABLE';
     latitude: number;
     longitude: number;
     locationName: string;
-    vehicle: Vehicle;
+    vehicle: TVehicle;
     createdAt: string;
     updatedAt: string;
   };
@@ -87,5 +88,6 @@ export type {
     TDriverNearBy,
     TDriverNearByRes,
     TCreateDriverRes,
-    TDriver
+    TDriver,
+    TVehicle
 }

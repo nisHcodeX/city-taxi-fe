@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from './interceptorsSlice';
-import { TCreateDriver, TCreateDriverRes, TDriverNearBy } from '../types/driver';
+import { TCreateDriver, TCreateDriverRes, TDriverNearBy, TVehicle } from '../types/driver';
 import { TCreateVehicle } from '../types/vehicle';
 
 export const vehicleApiSlice = createApi({
@@ -14,6 +14,13 @@ export const vehicleApiSlice = createApi({
         body: data,
       }),
     }),
+    updateVehicle: builder.mutation<any, TCreateVehicle>({
+      query: (data) => ({
+        url: '/vehicle',
+        method: 'PATCH',
+        body: [data],
+      }),
+    }),
     getVehicleByid: builder.query<any, number>({
       query: (id) => ({
         url: '/vehicle',
@@ -23,4 +30,4 @@ export const vehicleApiSlice = createApi({
   }),
 });
 
-export const { useAddVehicleMutation, useLazyGetVehicleByidQuery } = vehicleApiSlice
+export const { useAddVehicleMutation, useLazyGetVehicleByidQuery, useUpdateVehicleMutation } = vehicleApiSlice

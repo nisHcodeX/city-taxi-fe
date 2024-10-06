@@ -3,20 +3,23 @@ import { useTranslation } from 'react-i18next';
 import './index.scss'
 import TaxiDialog from '../../components/Dialog/TaxtDialog';
 import React, { useEffect, useState } from 'react';
-import { useAddVehicleMutation, useLazyGetVehicleByidQuery } from '../../api/vehicleApiSlice';
+import { useAddVehicleMutation, useLazyGetVehicleByidQuery, useUpdateVehicleMutation } from '../../api/vehicleApiSlice';
 import DriverCard from '../../components/driverCard';
 import { TCreateVehicle } from '../../types/vehicle';
 import { accountType } from '../../const';
 import { useNavigate } from 'react-router';
 import LogoContainer from '../../components/logoContainer';
 import TaxiAlert from '../../components/Alert';
+import { TVehicle } from '../../types/driver';
+import { useLazyGetDriverQuery } from '../../api/driverApiSlice';
 
 
 export default function Dashboard() {
   const { t, i18n } = useTranslation();
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [triggerAddVehicle, { isLoading }] = useAddVehicleMutation();
-  const [triggerAddVehicleList, { isLoading: isVehicleLoading, data: vehicleList }] = useLazyGetVehicleByidQuery();
+  const [triggerUpdateVehicle] = useUpdateVehicleMutation();
+  const [triggerAddVehicleList, { isLoading: isVehicleLoading, data: vehicleList }] = useLazyGetDriverQuery();
   const navigate = useNavigate();
 
   const [modelError, setModelError] = React.useState(false);
@@ -31,7 +34,8 @@ export default function Dashboard() {
   const storedAccount = localStorage.getItem('account');
   const accData = storedAccount ? JSON.parse(storedAccount) : null;
   const [message, setMessage] = React.useState<{ message: string, type: AlertColor } | null>(null);
-
+  const [updatedVehicle, setUpdatedVehicle] = React.useState<TVehicle | undefined>(undefined);
+  
   useEffect(() => {
 
     if (!accData) {
@@ -44,14 +48,31 @@ export default function Dashboard() {
     }
   }, []);
 
+  const onUpdateVehicle = (data: TVehicle) => {
+    setUpdatedVehicle(data);
+    setOpenDialog(true);
+    setVehicleTypeId(data.vehicleType.id);
+  };
+
   const addVehicleToSystem = (data: TCreateVehicle) => {
     setMessage(null)
-    triggerAddVehicle([data])
-    .unwrap()
-    .then(res => { setMessage({ message: 'Successfuly Add Vehicle', type: 'success' }) })
-    .catch(err => setMessage({ message: err?.data?.message, type: 'error' }));
-    setOpenDialog(false);
+    if (updatedVehicle) {
+      const updtedData = {...data, id: updatedVehicle.id}
+      triggerUpdateVehicle(updtedData)
+        .unwrap()
+        .then(res => { setMessage({ message: 'Successfuly updated Vehicle', type: 'success' }) })
+        .catch(err => setMessage({ message: err?.data?.message, type: 'error' }));
+    } else {
+      triggerAddVehicle([data])
+        .unwrap()
+        .then(res => { setMessage({ message: 'Successfuly Add Vehicle', type: 'success' }) })
+        .catch(err => setMessage({ message: err?.data?.message, type: 'error' }));
+
+    }
+
     triggerAddVehicleList(accData.userId);
+    setOpenDialog(false);
+    setUpdatedVehicle(undefined);
   }
   const validateInputs = () => {
 
@@ -139,6 +160,7 @@ export default function Dashboard() {
             variant="outlined"
             color={modelError ? 'error' : 'primary'}
             sx={{ ariaLabel: 'model' }}
+            defaultValue={updatedVehicle?.model || ''}
           />
         </FormControl>
         <FormControl>
@@ -158,6 +180,7 @@ export default function Dashboard() {
             variant="outlined"
             color={manufacturerError ? 'error' : 'primary'}
             sx={{ ariaLabel: 'manufacturer' }}
+            defaultValue={updatedVehicle?.manufacturer || ''}
           />
         </FormControl>
         <FormControl>
@@ -177,6 +200,7 @@ export default function Dashboard() {
             variant="outlined"
             color={colourError ? 'error' : 'primary'}
             sx={{ ariaLabel: 'color' }}
+            defaultValue={updatedVehicle?.colour || ''}
           />
         </FormControl>
         <FormControl>
@@ -196,6 +220,7 @@ export default function Dashboard() {
             variant="outlined"
             color={licensePlateError ? 'error' : 'primary'}
             sx={{ ariaLabel: 'licensePlate' }}
+            defaultValue={updatedVehicle?.licensePlate || ''}
           />
         </FormControl>
         <FormControl>
@@ -214,12 +239,20 @@ export default function Dashboard() {
       </Box>
     </>
   }
-  console.log('vel', vehicleList);
+
+  const onCloseClick = () => {
+    setMessage(null);
+    setOpenDialog(false);
+    setUpdatedVehicle(undefined);
+
+  };
+
+
   return (
     <div>
       <h2 className='title-dash'>Driver Dashboard</h2>
       {message && <TaxiAlert text={message.message} severity={message.type} onClose={() => setMessage(null)} />}
-      <TaxiDialog open={openDialog} handleClose={() => setOpenDialog(false)} title={'add vehicle to system'} infoText={"You can add vehicle in here"} children={addVehicle()} handleContinue={() => validateInputs()} />
+      <TaxiDialog open={openDialog} handleClose={onCloseClick} title={'add vehicle to system'} infoText={"You can add vehicle in here"} children={addVehicle()} handleContinue={() => validateInputs()} />
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
         <div className="add-driver-container">
           <Button
@@ -234,13 +267,13 @@ export default function Dashboard() {
             My Vehicles List
           </h3>
           <div className='vehicle-container'>
-            {isVehicleLoading && <CircularProgress/>}
-            {vehicleList ? <DriverCard vehicleType={2} /> 
-            : 
-            <>
-            <LogoContainer/>
-            <h3 className='no-vhicle'>You haven't added vehicles. Please add a vehicle to the system.</h3>
-            </>}
+            {isVehicleLoading && <CircularProgress />}
+            {vehicleList ? vehicleList[0]?.vehicles?.map((vehicle: TVehicle, index: number) => <DriverCard key={index} data={vehicle} onUpdateVehicle={() => onUpdateVehicle(vehicle)} />)
+              :
+              <>
+                <LogoContainer />
+                <h3 className='no-vhicle'>You haven't added vehicles. Please add a vehicle to the system.</h3>
+              </>}
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { Button, Card, CardContent } from "@mui/material";
+import { Button, Card, CardContent, Rating } from "@mui/material";
 import { TaxiBike, TaxiCar } from "../../assets/img";
 import { VehicleType } from "../../const";
 import './index.scss'
@@ -26,6 +26,7 @@ export default function TaxiCard({ data, showButton, onRideBook }: TaxiCardProps
                         <div className="detail">Vehicle Number: {data.vehicle.licensePlate}</div>
                         <div className="detail">Driver Name : {data.name}</div>
                         <div className="detail">Location : {data.locationName}</div>
+                        <div className="detail">Driver Reviews: <Rating value={data.avgRating} /></div>
                         <div className="button">
                             {showButton ? <></> : <Button
                                 sx={{ marginTop: '8px', }}
