@@ -35,12 +35,11 @@ type VehicleType = {
     updatedAt: string | null;
   };
   
-  
   type TBookingRide = {
     id: number;
     estimatedCost: number;
     distanceInMeters: number;
-    status: "COMPLETED" | "PENDING" | "CANCELLED";
+    status: "COMPLETED" | "ACTIVE" | "CANCELLED" | "PAID";
     driver: TDriverNearByRes;
     customer: TCreateCustomerRes;
     vehicle: Vehicle;

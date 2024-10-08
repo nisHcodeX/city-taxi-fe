@@ -169,7 +169,7 @@ const SideNav = ({ open, onDrawerOpen, onDrawerClose }: any) => {
             <ListItemText primary={t('profile')} sx={{ opacity: open ? 1 : 0 }} />
           </ListItemButton>
         </ListItem>
-        {/* <ListItem key={'Rides'} disablePadding sx={{ display: 'block' }}>
+        <ListItem key={'Rides'} disablePadding sx={{ display: 'block' }}>
           <ListItemButton
             sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5 }}
             onClick={() => {
@@ -181,7 +181,7 @@ const SideNav = ({ open, onDrawerOpen, onDrawerClose }: any) => {
             </ListItemIcon>
             <ListItemText primary={t('rides')} sx={{ opacity: open ? 1 : 0 }} />
           </ListItemButton>
-        </ListItem> */}
+        </ListItem>
         <ListItem key={'Logout'} disablePadding sx={{ display: 'block', marginTop: 'auto' }}>
           <ListItemButton
             sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5 }}

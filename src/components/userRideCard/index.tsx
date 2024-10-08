@@ -7,12 +7,13 @@ import { TBookingRide } from "../../types/booking";
 interface TaxiCardProps {
     data: TBookingRide,
     driver?: boolean,
+    disableButton?: boolean,
     oReviewRide?: () => void
     onPayRide?: () => void
     onCompleteRide?: () => void
 }
-export default function UserRideCrd({ data, oReviewRide, onPayRide, driver, onCompleteRide }: TaxiCardProps) {
-    console.log('data', data)
+export default function UserRideCrd({ data, oReviewRide, onPayRide, driver, onCompleteRide, disableButton }: TaxiCardProps) {
+
     return (
         <CardContent sx={{ padding: '20px', maxWidth: '800px', width: '100%', }}>
             <Card variant='outlined' className='login-card'>
@@ -42,6 +43,7 @@ export default function UserRideCrd({ data, oReviewRide, onPayRide, driver, onCo
                                 fullWidth
                                 variant="contained"
                                 onClick={oReviewRide}
+                                disabled={disableButton}
                             >
                                 Review
                             </Button>}
@@ -52,6 +54,7 @@ export default function UserRideCrd({ data, oReviewRide, onPayRide, driver, onCo
                                 fullWidth
                                 variant="contained"
                                 onClick={onPayRide}
+                                disabled={disableButton}
                             >
                                 Pay
                             </Button>}
