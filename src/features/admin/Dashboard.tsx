@@ -69,7 +69,7 @@ export default function Dashboard() {
                 seatCount: 1
               </div>
               <div>
-                <FormLabel className="sign-label" htmlFor="pricePerMeterBike">Price PerMeter</FormLabel>
+                <FormLabel className="sign-label" htmlFor="pricePerMeterBike">Price Per Km</FormLabel>
                 <TextField
                   className="input-item"
                   id="pricePerMeterBike"
@@ -99,7 +99,7 @@ export default function Dashboard() {
                 seatCount: 4
               </div>
               <div>
-                <FormLabel className="sign-label" htmlFor="pricePerMeter">Price PerMeter</FormLabel>
+                <FormLabel className="sign-label" htmlFor="pricePerMeter">Price Per Km</FormLabel>
                 <TextField
                   className="input-item"
                   id="pricePerMeter"
