@@ -30,6 +30,7 @@ const PendingReviews = ({ userId, oReviewRide, onPayRide }: Props) => {
               triggerGetBookings({ customerId: userId, status: 'PAID' });
               oReviewRide(booking);
             }}
+            customer
             onPayRide={() => {
               triggerGetBookings({ customerId: userId, status: 'PAID' });
               onPayRide(booking);
