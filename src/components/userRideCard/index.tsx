@@ -23,7 +23,7 @@ export default function UserRideCrd({ data, oReviewRide, onPayRide, driver, onCo
                     </div>
                     <div className="taxt-card-content">
                         <div className="title">{data.vehicle.manufacturer} {data.vehicle.model}</div>
-                        <div className="detail">Per km : {data.vehicle.vehicleType.pricePerMeter}Rs</div>
+                        <div className="detail">Per km : Rs:{data.vehicle.vehicleType.pricePerMeter}</div>
                         <div className="detail">Passenger Count : {data.vehicle.vehicleType.seatCount}</div>
                         <div className="detail">Vehicle Number: {data.vehicle.licensePlate}</div>
                         <div className="detail">Distance: {data.distanceInMeters ? data.distanceInMeters / 1000 : 0} Km</div>

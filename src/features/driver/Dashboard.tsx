@@ -268,7 +268,7 @@ export default function Dashboard() {
           </h3>
           <div className='vehicle-container'>
             {isVehicleLoading && <CircularProgress />}
-            {vehicleList ? vehicleList[0]?.vehicles?.map((vehicle: TVehicle, index: number) => <DriverCard key={index} data={vehicle} onUpdateVehicle={() => onUpdateVehicle(vehicle)} />)
+            {(vehicleList && vehicleList[0]?.vehicles && vehicleList[0]?.vehicles?.length > 0) ? vehicleList[0]?.vehicles?.map((vehicle: TVehicle, index: number) => <DriverCard key={index} data={vehicle} onUpdateVehicle={() => onUpdateVehicle(vehicle)} />)
               :
               <>
                 <LogoContainer />

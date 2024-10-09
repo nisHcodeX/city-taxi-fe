@@ -210,7 +210,7 @@ export default function RidesPage() {
         <div className="driver-body">
           <div className='vehicle-container'>
             {isBookingsLoading && <CircularProgress />}
-            {bookingData ? bookingData.map((booking, index) => <UserRideCrd key={index} data={booking} oReviewRide={() => oReviewRide(booking)} onPayRide={() => onPayRide(booking)} />) : <></>}
+            {bookingData ? bookingData.map((booking, index) => <UserRideCrd key={index} data={booking} oReviewRide={() => oReviewRide(booking)} onPayRide={() => onPayRide(booking)} disableButton={true} />) : <></>}
           </div>
         </div>
       </div>

@@ -48,7 +48,7 @@ export default function Profile() {
         if (!accData) {
             navigate('/login');
         } else if (accData.accountType == accountType.driver) {
-            triggerDriver(1);
+            triggerDriver(accData.userId);
         } else {
             localStorage.removeItem('account');
             navigate('/login');

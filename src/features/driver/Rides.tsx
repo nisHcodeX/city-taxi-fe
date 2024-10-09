@@ -19,7 +19,7 @@ export default function Rides() {
 
 
   useEffect(() => {
-    triggerGetBookings({ driverId: accData.uderId });
+    triggerGetBookings({ driverId: accData.userId});
   }, []);
 
   const onCompleteRide = (data: any) => {
@@ -38,7 +38,7 @@ export default function Rides() {
         <div className='vehicle-container'>
           {isBookingsLoading && <CircularProgress />}
           {bookingData ?
-            bookingData.map((booking, index) => <UserRideCrd key={index} data={booking} onCompleteRide={() => onCompleteRide(booking)} />)
+            bookingData.map((booking, index) => <UserRideCrd key={index} data={booking} onCompleteRide={() => onCompleteRide(booking)} disableButton/>)
             : <div className="no-data"> <LogoContainer />
               <h3 className='no-vhicle'>You have no rides yet.</h3></div>}
         </div>
