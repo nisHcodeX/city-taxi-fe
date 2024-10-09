@@ -38,14 +38,11 @@ export default function UserRideCrd({
             <div className="title">
               {data.vehicle.manufacturer} {data.vehicle.model}
             </div>
-            <div className="detail">Per km : {data.vehicle.vehicleType.pricePerMeter}Rs</div>
+            <div className="detail">Per km : Rs:{data.vehicle.vehicleType.pricePerMeter}</div>
             <div className="detail">Passenger Count : {data.vehicle.vehicleType.seatCount}</div>
             <div className="detail">Vehicle No: {data.vehicle.licensePlate}</div>
             <div className="detail">
-              Distance:{' '}
-              {data.distanceInMeters
-                ? Math.round((data.distanceInMeters / 1000 + Number.EPSILON) * 100) / 100
-                : 0}{' '}
+              {data.distanceInMeters}
               Km
             </div>
             <div className="detail">Status: {data.status}</div>
