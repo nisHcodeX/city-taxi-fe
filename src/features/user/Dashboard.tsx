@@ -120,19 +120,10 @@ export default function Dashboard() {
           </DialogActions>
         </Dialog>
         <Dialog open={openPay}>
-          <DialogTitle>Book A Ride</DialogTitle>
+          <DialogTitle>Pay For the Ride</DialogTitle>
           <DialogContentText sx={{ padding: '0 20px' }}>
-            Select A start And end destinations to book a ride
+            You can pay for the ride by clicking on the pay here button
           </DialogContentText>
-          <DialogContent>
-            <Rating
-              name="simple-controlled"
-              value={value}
-              onChange={(event, newValue) => {
-                setValue(newValue);
-              }}
-            />
-          </DialogContent>
           <DialogActions sx={{ pb: 3, px: 3 }}>
             <Button onClick={() => setOpenPay(false)}>Cancel</Button>
             {selectedPayment && (

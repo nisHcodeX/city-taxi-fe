@@ -68,6 +68,7 @@ export default function Home() {
         .then(res => { setMessage({ message: 'Successfuly book a ride', type: 'success' }) })
         .catch(err => setMessage({ message: err?.data?.message, type: 'error' }));
       setOpen(false);
+      
     }
   };
 
@@ -79,7 +80,7 @@ export default function Home() {
     if (locationData?.lat && locationData.lng) {
       triggerNearbyDriver({ radius: 4, lat: locationData.lat, lng: locationData.lng });
     }
-  }, [locationData, triggerNearbyDriver]);
+  }, [locationData, triggerNearbyDriver, message]);
 
   return (
     <div>
