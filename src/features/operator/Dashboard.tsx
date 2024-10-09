@@ -102,7 +102,7 @@ export default function Dashboard() {
           </Button>
         </div>
         {message && <TaxiAlert text={message.message} severity={message.type} onClose={() => setMessage(null)} />}
-        <Dialog open={openDialog} >
+        <Dialog open={openDialog} sx={{ zIndex: '999' }}>
           <DialogTitle>Operator Add Customer</DialogTitle>
           <AddCustomerByOperator customerData={customerDataGetter} setOpenDialog={setOpenDialog} />
         </Dialog>
