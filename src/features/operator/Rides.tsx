@@ -236,6 +236,7 @@ export default function RidesPage() {
                   data={booking}
                   oReviewRide={() => oReviewRide(booking)}
                   onPayRide={() => onPayRide(booking)}
+                  
                 />
               ))
             ) : (

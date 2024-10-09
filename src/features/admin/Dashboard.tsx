@@ -82,11 +82,11 @@ export default function Dashboard() {
                   fullWidth
                   variant="outlined"
                   sx={{ ariaLabel: 'pricePerMeterBike' }}
-                  defaultValue={data ? data[1].pricePerMeter : ''}
+                  defaultValue={data ? data[0].pricePerMeter : ''}
                 />
               </div>
               <div className="btn-con">
-                <Button variant='contained' onClick={() => { data && onUpdateBikeClick(data[1].id) }}>
+                <Button variant='contained' onClick={() => { data && onUpdateBikeClick(data[0].id) }}>
                   Update Bike Price
                 </Button>
               </div>
@@ -112,11 +112,11 @@ export default function Dashboard() {
                   fullWidth
                   variant="outlined"
                   sx={{ ariaLabel: 'pricePerMeter' }}
-                  defaultValue={data ? data[0].pricePerMeter : ''}
+                  defaultValue={data ? data[1].pricePerMeter : ''}
                 />
               </div>
               <div className="btn-con">
-                <Button variant='contained' onClick={() => { data && onUpdateCarClick(data[0].id) }}>
+                <Button variant='contained' onClick={() => { data && onUpdateCarClick(data[1].id) }}>
                   Update Car Price
                 </Button>
               </div>

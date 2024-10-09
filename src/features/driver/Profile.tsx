@@ -48,17 +48,18 @@ export default function Profile() {
         if (!accData) {
             navigate('/login');
         } else if (accData.accountType == accountType.driver) {
-            triggerDriver(1);
+            triggerDriver(accData.userId);
         } else {
             localStorage.removeItem('account');
             navigate('/login');
         }
     }, []);
 
-    
+
     const handleRegister = async (data: TCreateDriver) => {
         setMessage(null);
-        triggerUpdateDriver(data)
+        const updatedDriverData = { id: accData.userId, ...data }
+        triggerUpdateDriver(updatedDriverData)
             .unwrap()
             .then(res => { setMessage({ message: 'Successfuly Updated driver', type: 'success' }) })
             .catch(err => setMessage({ message: err?.data?.message, type: 'error' }));

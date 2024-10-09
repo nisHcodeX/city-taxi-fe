@@ -29,7 +29,7 @@ export const driverApiSlice = createApi({
       query: (data) => ({
         url: '/driver',
         method: 'PATCH',
-        body: data,
+        body: [data],
       }),
     }),
     getDrivers: builder.query<any, void>({

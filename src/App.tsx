@@ -28,6 +28,7 @@ function App() {
       mode: themeMode,
     },
   });
+  
   return (
     <ThemeProvider theme={theme}>
       <ErrorBoundary>

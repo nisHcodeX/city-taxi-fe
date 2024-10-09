@@ -7,6 +7,7 @@ import { TBookingRide } from '../../types/booking';
 interface TaxiCardProps {
   data: TBookingRide;
   driver?: boolean | undefined;
+  customer?: boolean | undefined;
   oReviewRide?: (() => void) | undefined;
   onPayRide?: (() => void) | undefined;
   onCompleteRide?: (() => void) | undefined;
@@ -17,6 +18,7 @@ export default function UserRideCrd({
   onPayRide,
   driver,
   onCompleteRide,
+  customer
 }: TaxiCardProps) {
   console.log('data', data);
   console.log(`driver = ${driver}`);
@@ -60,7 +62,7 @@ export default function UserRideCrd({
             <div className="detail">Driver No: {data.driver.phoneNumber} </div>
 
             <div className="button">
-              {data.status == bookingStatus.paid && !driver && (
+              {data.status == bookingStatus.paid && customer && (
                 <Button
                   sx={{ marginTop: '8px' }}
                   color="success"
@@ -72,7 +74,7 @@ export default function UserRideCrd({
                   Review
                 </Button>
               )}
-              {data.status == bookingStatus.completed && !driver && (
+              {data.status == bookingStatus.completed && customer && (
                 <Button
                   sx={{ marginTop: '8px' }}
                   color="success"

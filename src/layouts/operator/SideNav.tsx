@@ -156,19 +156,6 @@ const SideNav = ({ open, onDrawerOpen, onDrawerClose }: any) => {
             <ListItemText primary={t('dashboard')} sx={{ opacity: open ? 1 : 0 }} />
           </ListItemButton>
         </ListItem>
-        <ListItem key={'Profile'} disablePadding sx={{ display: 'block' }}>
-          <ListItemButton
-            sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5 }}
-            onClick={() => {
-              navigate(`/operator/profile`);
-            }}
-          >
-            <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
-              <ChecklistRtlOutlined />
-            </ListItemIcon>
-            <ListItemText primary={t('profile')} sx={{ opacity: open ? 1 : 0 }} />
-          </ListItemButton>
-        </ListItem>
         <ListItem key={'Rides'} disablePadding sx={{ display: 'block' }}>
           <ListItemButton
             sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5 }}
@@ -180,6 +167,19 @@ const SideNav = ({ open, onDrawerOpen, onDrawerClose }: any) => {
               <CalculateOutlined />
             </ListItemIcon>
             <ListItemText primary={t('rides')} sx={{ opacity: open ? 1 : 0 }} />
+          </ListItemButton>
+        </ListItem>
+        <ListItem key={'Profile'} disablePadding sx={{ display: 'block' }}>
+          <ListItemButton
+            sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5 }}
+            onClick={() => {
+              navigate(`/operator/profile`);
+            }}
+          >
+            <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
+              <ChecklistRtlOutlined />
+            </ListItemIcon>
+            <ListItemText primary={t('profile')} sx={{ opacity: open ? 1 : 0 }} />
           </ListItemButton>
         </ListItem>
         <ListItem key={'Logout'} disablePadding sx={{ display: 'block', marginTop: 'auto' }}>
