@@ -8,7 +8,7 @@ import { TLocationData } from '../../types/geoLocation';
 import { useLazyGetNearByQuery } from '../../api/driverApiSlice';
 import TaxiAlert from '../../components/Alert';
 import AddCustomerByOperator from './addcutomer';
-import { TCreateCustomerRes } from '../../types/customer';
+import { TCreateCustomerRes, TCreateUnRegCustomer, TCreateUnRegCustomerRes } from '../../types/customer';
 import { TDriverNearByRes } from '../../types/driver';
 import LocationDataNotFound from '../../components/locationNotFound';
 import { useBookRideMutation } from '../../api/bookingApiSlice';
@@ -22,7 +22,7 @@ export default function Dashboard() {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [message, setMessage] = useState<{ message: string, type: AlertColor } | null>(null);
   const [locationData, setLocationData] = useState<TLocationData | undefined>({ address: 'galle', lat: 6.026143327519091, lng: 80.21649701908821 });
-  const [customerData, setCustomerData] = useState<TCreateCustomerRes | undefined>(undefined)
+  const [customerData, setCustomerData] = useState<TCreateCustomerRes | TCreateUnRegCustomerRes | undefined>(undefined)
   const [open, setOpen] = useState<boolean>(false);
   const [selectedDriver, setSelectedDriver] = useState<TDriverNearByRes | undefined>(undefined);
   const [startLocationData, setStartLocationData] = useState<TLocationData | undefined>(undefined);
@@ -39,6 +39,7 @@ export default function Dashboard() {
     }
   };
   const handleContinue = () => {
+
     if (customerData) {
       if (!startLocationData) {
         setMessage({ message: 'Please Select the Start Destination', type: 'error' });
@@ -56,7 +57,7 @@ export default function Dashboard() {
   
         triggerBookRide(rideData)
           .unwrap()
-          .then(res => { setMessage({ message: 'Successfuly book a ride', type: 'success' }) })
+          .then(res => { setMessage({ message: 'Successfuly book a ride', type: 'success' }), locationData && triggerNearbyDriver({ radius: 4, lat: locationData.lat, lng: locationData.lng }); })
           .catch(err => setMessage({ message: err?.data?.message, type: 'error' }));
         setOpen(false);
       }
@@ -79,7 +80,7 @@ export default function Dashboard() {
     }
   }, [locationData, triggerNearbyDriver]);
 
-  const customerDataGetter = (data: TCreateCustomerRes) => {
+  const customerDataGetter = (data: TCreateCustomerRes | TCreateUnRegCustomerRes) => {
     setCustomerData(data);
   }
   const onBackClick = () => {
@@ -106,7 +107,7 @@ export default function Dashboard() {
           <DialogTitle>Operator Add Customer</DialogTitle>
           <AddCustomerByOperator customerData={customerDataGetter} setOpenDialog={setOpenDialog} />
         </Dialog>
-        <Dialog open={open} >
+        <Dialog open={open} sx={{ zIndex: '999' }} >
           <DialogTitle>Book A Ride</DialogTitle>
           <DialogContentText sx={{ padding: '0 20px' }}>
             Select A start And end destinations to book a ride

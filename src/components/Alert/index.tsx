@@ -26,6 +26,7 @@ const TaxiAlert = ({ text, severity, onClose }: AlertProps) => {
 
     return (
         <Snackbar
+            style={{top: '75px'}}
             anchorOrigin={{ vertical : 'top', horizontal: 'right'}}
             open={state.message ? true : false}
         >

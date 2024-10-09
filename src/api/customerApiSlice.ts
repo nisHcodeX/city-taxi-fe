@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from './interceptorsSlice';
-import { TCreateCustomer, TCreateCustomerRes, TUpdateCustomer } from '../types/customer';
+import { TCreateCustomer, TCreateCustomerRes, TCreateUnRegCustomer, TCreateUnRegCustomerRes, TUpdateCustomer } from '../types/customer';
 import { VoidExpression } from 'typescript';
 
 export const customerApiSlice = createApi({
@@ -10,6 +10,13 @@ export const customerApiSlice = createApi({
     register: builder.mutation<TCreateCustomerRes, TCreateCustomer>({
       query: (data) => ({
         url: '/customer/register',
+        method: 'POST',
+        body: data,
+      }),
+    }),
+    unregCustomer: builder.mutation<TCreateUnRegCustomerRes[], TCreateUnRegCustomer>({
+      query: (data) => ({
+        url: '/customer',
         method: 'POST',
         body: data,
       }),
@@ -45,6 +52,7 @@ export const customerApiSlice = createApi({
 
 export const {
   useRegisterMutation,
+  useUnregCustomerMutation,
   useLazyGetCustomerQuery,
   useLazyGetCustomersQuery,
   useCustomerUpdateMutation,

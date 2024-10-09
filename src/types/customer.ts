@@ -3,7 +3,21 @@ type TCreateCustomer = {
     email: string;
     phoneNumber: string;
 }
+type TCreateUnRegCustomer = {
 
+    name: string;
+    email?: string;
+    phoneNumber: string;
+}
+
+type TCreateUnRegCustomerRes = {
+    id: number;
+    name: string;
+    email?: string;
+    phoneNumber: string;
+    createdAt: string;
+    updatedAt: string;
+};
 type TCreateCustomerRes = {
     id: number;
     name: string;
@@ -24,5 +38,7 @@ type TUpdateCustomer = {
 export type {
     TCreateCustomer,
     TCreateCustomerRes,
-    TUpdateCustomer
+    TUpdateCustomer,
+    TCreateUnRegCustomer,
+    TCreateUnRegCustomerRes
 }

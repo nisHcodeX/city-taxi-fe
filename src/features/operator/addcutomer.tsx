@@ -2,9 +2,9 @@ import styled from "@emotion/styled";
 import { AlertColor, Box, Button, Card, CardContent, CircularProgress, FormControl, FormLabel, Stack, TextField, Typography } from "@mui/material";
 import LogoContainer from "../../components/logoContainer";
 import { useNavigate } from "react-router";
-import { useLazyGetCustomerQuery, useRegisterMutation } from "../../api/customerApiSlice";
+import { useLazyGetCustomerQuery, useRegisterMutation, useUnregCustomerMutation } from "../../api/customerApiSlice";
 import React, { useEffect } from "react";
-import { TCreateCustomer, TCreateCustomerRes } from "../../types/customer";
+import { TCreateCustomer, TCreateCustomerRes, TCreateUnRegCustomer, TCreateUnRegCustomerRes } from "../../types/customer";
 import TaxiAlert from "../../components/Alert";
 
 const SignInContainer = styled(Stack)(({ theme }) => ({
@@ -19,14 +19,14 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
         backgroundRepeat: 'no-repeat',
     },
 }));
-interface AddCustomerByOperatorProps{
-  customerData: any,
-  setOpenDialog: any,
+interface AddCustomerByOperatorProps {
+    customerData: any,
+    setOpenDialog: any,
 }
 
 
-export default function AddCustomerByOperator({customerData, setOpenDialog} : AddCustomerByOperatorProps) {
-    const [triggerRegister, { isLoading }] = useRegisterMutation();
+export default function AddCustomerByOperator({ customerData, setOpenDialog }: AddCustomerByOperatorProps) {
+    const [triggerRegister, { isLoading }] = useUnregCustomerMutation();
 
     const [firstNameError, setFirstNameError] = React.useState(false);
     const [firstNameErrorMessage, setFirstNameErrorMessage] = React.useState('');
@@ -36,20 +36,24 @@ export default function AddCustomerByOperator({customerData, setOpenDialog} : Ad
     const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
     const [phoneNumberError, setPhoneNumberError] = React.useState(false);
     const [phoneNumberErrorMessage, setPhoneNumberErrorMessage] = React.useState('');
-    const [message, setMessage] = React.useState<{message: string, type: AlertColor}| null>(null);
+    const [message, setMessage] = React.useState<{ message: string, type: AlertColor } | null>(null);
 
 
-    const registeredData = (data : TCreateCustomerRes) => {
-      customerData(data)
-      setMessage({message: 'Successfuly registered customer', type: 'success'})
-      setOpenDialog(false);
+    const registeredData = (data: TCreateUnRegCustomerRes[]) => {
+        customerData(data[0])
+        setMessage({ message: 'Successfuly registered customer', type: 'success' })
+        // setOpenDialog(false);
     }
-    const handleRegister = async (data: TCreateCustomer) => {
+    const handleRegister = async (data: TCreateUnRegCustomer) => {
         setMessage(null);
-        triggerRegister(data)
+        let newData: TCreateUnRegCustomer = { name: data.name, phoneNumber: data.phoneNumber };
+        if (data.email) {
+            newData = { ...newData, email: data.email }
+        }
+        triggerRegister(newData)
             .unwrap()
             .then(res => registeredData(res))
-            .catch(err => setMessage({message: err?.data?.message, type: 'error'}));
+            .catch(err => setMessage({ message: err?.data?.message, type: 'error' }));
     };
 
     const validateInputs = () => {
@@ -77,14 +81,14 @@ export default function AddCustomerByOperator({customerData, setOpenDialog} : Ad
             setLastNameError(false);
             setLastNameErrorMessage('');
         }
-        if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-            setEmailError(true);
-            setEmailErrorMessage('Please enter a valid email address.');
-            isValid = false;
-        } else {
-            setEmailError(false);
-            setEmailErrorMessage('');
-        }
+        // if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
+        //     setEmailError(true);
+        //     setEmailErrorMessage('Please enter a valid email address.');
+        //     isValid = false;
+        // } else {
+        //     setEmailError(false);
+        //     setEmailErrorMessage('');
+        // }
         if (!phoneNumber.value || !/^\+94\d{9}$/.test(phoneNumber.value)) {
             setPhoneNumberErrorMessage('Please enter a valid phone number.');
             isValid = false;
@@ -98,7 +102,7 @@ export default function AddCustomerByOperator({customerData, setOpenDialog} : Ad
 
     return (
         <SignInContainer>
-            {message && <TaxiAlert text={message.message} severity={message.type} onClose={()=>setMessage(null)}/>}
+            {message && <TaxiAlert text={message.message} severity={message.type} onClose={() => setMessage(null)} />}
             <Box sx={{ width: '100%', typography: 'body1', marginTop: '0px' }} className="login-wrapper"
             >
                 <CardContent sx={{ width: '600px', }}>
@@ -155,18 +159,17 @@ export default function AddCustomerByOperator({customerData, setOpenDialog} : Ad
                                 <FormLabel className="sign-label" htmlFor="email">Email</FormLabel>
                                 <TextField
                                     className="input-item"
-                                    error={emailError}
-                                    helperText={emailErrorMessage}
+                                    // error={emailError}
+                                    // helperText={emailErrorMessage}
                                     id="email"
                                     type="email"
                                     name="email"
                                     placeholder="your@email.com"
-                                    autoComplete="email"
-                                    autoFocus
-                                    required
+                                    // autoComplete="email"
+                                    // autoFocus
                                     fullWidth
                                     variant="outlined"
-                                    color={emailError ? 'error' : 'primary'}
+                                    // color={emailError ? 'error' : 'primary'}
                                     sx={{ ariaLabel: 'email' }}
                                 />
                             </FormControl>
@@ -193,13 +196,14 @@ export default function AddCustomerByOperator({customerData, setOpenDialog} : Ad
                                 type="button"
                                 variant="contained"
                                 onClick={validateInputs}
+                                aria-hidden="false"
                             >
                                 {isLoading ? <CircularProgress /> : 'Create Customer'}
                             </Button>
                             <Button
                                 type="button"
                                 variant="outlined"
-                                onClick={()=> setOpenDialog(false)}
+                                onClick={() => setOpenDialog(false)}
                             >
                                 Cancel
                             </Button>
