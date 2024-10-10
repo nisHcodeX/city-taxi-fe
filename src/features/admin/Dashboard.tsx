@@ -18,25 +18,30 @@ export default function Dashboard() {
     triggerGetMeterPrice();
     triggerGetDashboard()
   }, [])
-  const onUpdateBikeClick = (id: number) => {
+  const onUpdateBikeClick = () => {
     const pricePerMeterBike = document.getElementById('pricePerMeterBike') as HTMLInputElement;
     if (pricePerMeterBike.value) {
-      const data = { id, pricePerMeter: parseFloat(pricePerMeterBike.value) }
+      const data = { id: 1, pricePerMeter: parseFloat(pricePerMeterBike.value) }
       triggerUpdatePrices(data)
         .unwrap()
         .then(res => { setMessage({ message: 'successfully update bike meter price', type: 'success' }), triggerGetMeterPrice() })
         .catch(err => setMessage({ message: err?.data?.message, type: 'error' }));
     }
   }
-  const onUpdateCarClick = (id: number) => {
+  const onUpdateCarClick = () => {
     const pricePerMeter = document.getElementById('pricePerMeter') as HTMLInputElement;
     if (pricePerMeter.value) {
-      const data = { id, pricePerMeter: parseFloat(pricePerMeter.value) }
+      const data = { id: 2, pricePerMeter: parseFloat(pricePerMeter.value) }
       triggerUpdatePrices(data)
         .unwrap()
         .then(res => { setMessage({ message: 'successfully update car meter price', type: 'success' }), triggerGetMeterPrice() })
         .catch(err => setMessage({ message: err?.data?.message, type: 'error' }));
     }
+  }
+
+  const vehicleValueFinder = (id: number) => {
+    const selectedVehicle = data?.find(vehicle => vehicle.id == id)
+    return selectedVehicle?.pricePerMeter;
   }
   return (
     <div>
@@ -49,7 +54,7 @@ export default function Dashboard() {
           series={[
             {
               data: [
-                { id: 0, value: dashboardData?.totalCustomers ?? 1 , label: 'Customers' },
+                { id: 0, value: dashboardData?.totalCustomers ?? 1, label: 'Customers' },
                 { id: 1, value: dashboardData?.totalBookings ?? 1, label: 'Rides' },
                 { id: 2, value: dashboardData?.totalDrivers ?? 1, label: 'Drivers' },
               ],
@@ -82,11 +87,11 @@ export default function Dashboard() {
                   fullWidth
                   variant="outlined"
                   sx={{ ariaLabel: 'pricePerMeterBike' }}
-                  defaultValue={data ? data[0].pricePerMeter : ''}
+                  defaultValue={data ? vehicleValueFinder(1) : ''}
                 />
               </div>
               <div className="btn-con">
-                <Button variant='contained' onClick={() => { data && onUpdateBikeClick(data[0].id) }}>
+                <Button variant='contained' onClick={() => { data && onUpdateBikeClick() }}>
                   Update Bike Price
                 </Button>
               </div>
@@ -112,11 +117,11 @@ export default function Dashboard() {
                   fullWidth
                   variant="outlined"
                   sx={{ ariaLabel: 'pricePerMeter' }}
-                  defaultValue={data ? data[1].pricePerMeter : ''}
+                  defaultValue={data ? vehicleValueFinder(2) : ''}
                 />
               </div>
               <div className="btn-con">
-                <Button variant='contained' onClick={() => { data && onUpdateCarClick(data[1].id) }}>
+                <Button variant='contained' onClick={() => { data && onUpdateCarClick() }}>
                   Update Car Price
                 </Button>
               </div>

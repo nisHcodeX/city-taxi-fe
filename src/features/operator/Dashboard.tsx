@@ -39,7 +39,7 @@ export default function Dashboard() {
     }
   };
   const handleContinue = () => {
-
+    console.log('customerData', customerData)
     if (customerData) {
       if (!startLocationData) {
         setMessage({ message: 'Please Select the Start Destination', type: 'error' });
@@ -60,14 +60,16 @@ export default function Dashboard() {
           .then(res => { setMessage({ message: 'Successfuly book a ride', type: 'success' }), locationData && triggerNearbyDriver({ radius: 4, lat: locationData.lat, lng: locationData.lng }); })
           .catch(err => setMessage({ message: err?.data?.message, type: 'error' }));
         setOpen(false);
+        setSelectedDriver(undefined);
+        setMessage(null)
       }
       
     } else {
       setMessage({ message: 'Please Add customer first', type: 'error' })
+      setOpen(false);
+      setSelectedDriver(undefined);
+      setMessage(null)
     }
-    setOpen(false);
-    setSelectedDriver(undefined);
-    setMessage(null)
   };
 
   const locationResults = (data: TLocationData) => {
